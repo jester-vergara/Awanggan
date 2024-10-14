@@ -18,6 +18,35 @@ This document outlines the manual steps required to set up the foundational infr
 - Enable **AWS Control Tower** for multi-account governance.
 - Configure **IAM users and roles** with least-privilege access.
 
+
+## Step 3: Install Required Tools Using Chocolatey
+
+To streamline the setup process, we use **Chocolatey**, a Windows package manager, to install the essential tools required for the project.
+
+### Install Commands
+
+Run the following commands in your terminal to install all required tools:
+
+```bash
+# Git (for version control)
+choco install git
+
+# Terraform (for Infrastructure as Code)
+choco install terraform
+
+# AWS CLI (for interacting with AWS services)
+choco install awscli
+
+# AWS Vault (for securely managing AWS credentials)
+choco install aws-vault
+
+# Docker (if needed for containerized development environments)
+choco install docker
+
+# AWS Vault Setup 
+choco install aws-vault
+
+
 ### AWS Vault Setup (Optional)
 - Install AWS Vault to securely manage access to AWS credentials:
   ```bash
