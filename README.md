@@ -7,10 +7,10 @@ The goal of Project Awanggan is to create a reusable, scalable, and cost-effecti
 
 ## Documentation
 
-- [Initial Requirements](./docs/requirements.md)
-- [Key Considerations](./docs/considerations.md)
-- [Architecture Overview](./docs/architecture.md)
-- [Setup Guide](./docs/setup.md)
+- [Initial Requirements](./docs/requirements/requirements.md)
+- [Key Considerations](./docs/requirements/considerations.md)
+- [Architecture Overview](./docs/requirements/architecture.md)
+- [Setup Guide](./docs/requirements/setup.md)
 
 ## Key Technologies
 - **Terraform**: Infrastructure as Code (IaC) tool for provisioning AWS resources.
@@ -20,5 +20,5 @@ The goal of Project Awanggan is to create a reusable, scalable, and cost-effecti
 - **AWS Vault**: Securely managing AWS credentials in development environments.
 
 ## Getting Started
-For more details on how to set up the infrastructure, refer to the [Setup Guide](./docs/setup.md).
+For more details on how to set up the infrastructure, refer to the [Setup Guide](./docs/requirements/setup.md).
 
