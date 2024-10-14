@@ -45,9 +45,10 @@ choco install docker
 
 # AWS Vault Setup 
 choco install aws-vault
-
+```
 
 ### AWS Vault Setup (Optional)
 - Install AWS Vault to securely manage access to AWS credentials:
   ```bash
   choco install aws-vault
+```
