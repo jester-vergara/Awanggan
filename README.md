@@ -1,2 +1,4 @@
-# Awanggan
-Awanggan is a project to build a complete AWS infrastructure from scratch, following best practices for security, cost optimization, and scalability. Using Terraform for Infrastructure as Code and GitLab CI/CD, it automates cloud resource provisioning while ensuring secure credential management with AWS Vault.
+Project Awanggan: Complete AWS Infrastructure from Scratch
+Description: Awanggan is a comprehensive project designed to build a fully functional AWS infrastructure from scratch, incorporating the best practices for cloud architecture, cost optimization, security, monitoring, logging, networking, and scaling. The project is built with a focus on automation using Terraform for Infrastructure as Code (IaC), GitLab CI/CD for continuous deployment, and AWS Vault for secure management of AWS credentials.
+
+The goal of Project Awanggan is to create a reusable, scalable, and cost-effective infrastructure that follows AWS Well-Architected Framework principles, making it ideal for both startups and large-scale cloud environments.
