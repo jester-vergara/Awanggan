@@ -29,7 +29,7 @@ jobs:
       working-directory: ./aws/terraform/control-tower
       run: |
         terraform init
-        terraform plan -var-file="./aws/terraform/terraform.tfvars" -out=tfplan
+        terraform plan -var-file="./terraform/terraform.tfvars" -out=tfplan
 
   apply:
     runs-on: ubuntu-latest
