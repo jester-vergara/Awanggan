@@ -1,66 +1,17 @@
-provider "aws" {
-  region = var.region
+variable "account_names" {
+  type = list(string)
 }
 
-# AWS Organizations - Enable Control Tower
-resource "aws_organizations_organization" "org" {
-  aws_service_access_principals = ["controltower.amazonaws.com"]
-  feature_set = "ALL"
+variable "account_emails" {
+  type = list(string)
 }
 
-# AWS Control Tower Accounts
-resource "aws_organizations_account" "shared_account" {
-  name           = "Shared"
-  email                  = var.shared_email
-  parent_id = aws_organizations_organization.org.id
-}
+module "control_tower_accounts" {
+  source = "./modules/account"
 
-resource "aws_organizations_account" "log_archive_account" {
-  name           = "LogArchive"
-  email                  = var.log_archive_email
-  parent_id = aws_organizations_organization.org.id
-}
+  for_each = zipmap(var.account_names, var.account_emails)
 
-resource "aws_organizations_account" "audit_account" {
-  name           = "Audit"
-  email                  = var.audit_email
-  parent_id = aws_organizations_organization.org.id
+  account_name  = each.key
+  account_email = each.value
+  parent_id     = aws_organizations_organization.org.roots[0].id
 }
-
-# Additional Accounts
-resource "aws_organizations_account" "prod_account" {
-  name           = "Prod"
-  email                  = var.prod_email
-  parent_id = aws_organizations_organization.org.id
-}
-
-resource "aws_organizations_account" "dev_account" {
-  name           = "Dev"
-  email                  = var.dev_email
-  parent_id = aws_organizations_organization.org.id
-}
-
-resource "aws_organizations_account" "qa_account" {
-  name           = "QA"
-  email                  = var.qa_email
-  parent_id = aws_organizations_organization.org.id
-}
-
-resource "aws_organizations_account" "sandbox_account" {
-  name           = "Sandbox"
-  email                  = var.sandbox_email
-  parent_id = aws_organizations_organization.org.id
-}
-
-resource "aws_organizations_account" "logging_account" {
-  name           = "Logging"
-  email                  = var.logging_email
-  parent_id = aws_organizations_organization.org.id
-}
-
-resource "aws_organizations_account" "secops_account" {
-  name           = "SecOps"
-  email                  = var.secops_email
-  parent_id = aws_organizations_organization.org.id
-}
-
