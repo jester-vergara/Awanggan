@@ -9,56 +9,56 @@ resource "aws_organizations_organization" "org" {
 }
 
 # AWS Control Tower Accounts
-resource "aws_controltower_account" "shared_account" {
+resource "aws_organizations_account" "shared_account" {
   account_name           = "Shared"
   email                  = var.shared_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
-resource "aws_controltower_account" "log_archive_account" {
+resource "aws_organizations_account" "log_archive_account" {
   account_name           = "LogArchive"
   email                  = var.log_archive_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
-resource "aws_controltower_account" "audit_account" {
+resource "aws_organizations_account" "audit_account" {
   account_name           = "Audit"
   email                  = var.audit_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
 # Additional Accounts
-resource "aws_controltower_account" "prod_account" {
+resource "aws_organizations_account" "prod_account" {
   account_name           = "Prod"
   email                  = var.prod_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
-resource "aws_controltower_account" "dev_account" {
+resource "aws_organizations_account" "dev_account" {
   account_name           = "Dev"
   email                  = var.dev_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
-resource "aws_controltower_account" "qa_account" {
+resource "aws_organizations_account" "qa_account" {
   account_name           = "QA"
   email                  = var.qa_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
-resource "aws_controltower_account" "sandbox_account" {
+resource "aws_organizations_account" "sandbox_account" {
   account_name           = "Sandbox"
   email                  = var.sandbox_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
-resource "aws_controltower_account" "logging_account" {
+resource "aws_organizations_account" "logging_account" {
   account_name           = "Logging"
   email                  = var.logging_email
   organizational_unit_id = aws_organizations_organization.org.id
 }
 
-resource "aws_controltower_account" "secops_account" {
+resource "aws_organizations_account" "secops_account" {
   account_name           = "SecOps"
   email                  = var.secops_email
   organizational_unit_id = aws_organizations_organization.org.id
