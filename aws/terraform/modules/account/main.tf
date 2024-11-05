@@ -1,3 +1,8 @@
+resource "aws_organizations_organization" "org" {
+  aws_service_access_principals = ["controltower.amazonaws.com"]
+  feature_set                   = "ALL"
+}
+
 resource "aws_organizations_account" "this" {
   name                      = var.account_name
   email                     = var.account_email
