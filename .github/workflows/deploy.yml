@@ -29,7 +29,7 @@ jobs:
       working-directory: ./aws/terraform/control-tower
       run: |
         terraform init
-        terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+        terraform plan -var-file="./aws/terraform/terraform.tfvars" -out=tfplan
 
   apply:
     runs-on: ubuntu-latest
@@ -55,4 +55,4 @@ jobs:
       working-directory: ./aws/terraform/control-tower
       run: |
         terraform init
-        terraform apply -auto-approve "tfplan"
+        terraform apply -var-file="./aws/terraform/terraform.tfvars" -auto-approve "tfplan"
