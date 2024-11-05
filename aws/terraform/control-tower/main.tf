@@ -6,7 +6,7 @@ variable "account_emails" {
   type = list(string)
 }
 
-module "control_tower_accounts" {
+module "aws_organizations_account" {
   source = "./modules/account"
 
   for_each = zipmap(var.account_names, var.account_emails)
