@@ -7,3 +7,10 @@ variable "region" {
   default     = "ap-southeast-1"  # Set a default region or override in terraform.tfvars
 }
 
+variable "account_names" {
+  type = list(string)
+}
+
+variable "account_emails" {
+  type = list(string)
+}
