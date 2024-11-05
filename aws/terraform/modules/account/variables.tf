@@ -26,8 +26,8 @@ variable "role_name" {
 # IAM user access to billing
 variable "iam_user_access_to_billing" {
   description = "Specifies if IAM users are allowed access to the AWS Billing and Cost Management console."
-  type        = bool
-  default     = DENY
+  type        = string
+  default     = "DENY"
 }
 
 # Option to close the account on deletion
