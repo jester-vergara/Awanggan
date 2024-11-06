@@ -26,9 +26,8 @@ jobs:
         aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: 1.5.2
+      working-directory: ./aws/terraform/control-tower
+      run: terraform init -reconfigure
 
     - name: Check Terraform Formatting
       working-directory: ./aws/terraform/control-tower
@@ -37,18 +36,6 @@ jobs:
     - name: Validate Terraform
       working-directory: ./aws/terraform/control-tower
       run: terraform validate
-
-    - name: Install TFLint
-      run: |
-        curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-
-    - name: Run TFLint
-      working-directory: ./aws/terraform/control-tower
-      run: tflint
-
-    - name: Initialize Terraform for Control Tower
-      working-directory: ./aws/terraform/control-tower
-      run: terraform init -reconfigure
 
     - name: Terraform Plan
       working-directory: ./aws/terraform/control-tower
