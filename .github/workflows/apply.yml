@@ -1,14 +1,12 @@
-name: Terraform Plan
+name: Terraform Apply
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  plan:
+  apply:
     runs-on: ubuntu-latest
-    name: Terraform Plan
+    name: Terraform Apply
 
     permissions:
       id-token: write
@@ -24,10 +22,8 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up Terraform
+      - name: Apply Terraform Plan for Control Tower
         working-directory: ./aws/terraform/control-tower
-        run: terraform init -reconfigure
-
-      - name: Terraform Plan
-        working-directory: ./aws/terraform/control-tower
-        run: terraform plan -var-file="../terraform.tfvars" -out=tfplan
+        run: |
+          terraform init
+          terraform apply -var-file="../terraform.tfvars" -auto-approve "tfplan"
