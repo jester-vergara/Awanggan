@@ -1,8 +1,8 @@
 # terraform.tfvars
 
-region = "ap-southeast-1"  # Override the region if needed
+region = "ap-southeast-1" # Override the region if needed
 
-account_names  = ["Shared", "LogArchive", "Audit", "Prod", "Dev", "QA", "Sandbox", "Logging", "SecOps"]
+account_names = ["Shared", "LogArchive", "Audit", "Prod", "Dev", "QA", "Sandbox", "Logging", "SecOps"]
 account_emails = [
   "AVALONIAN.MULTIMEDIA.PRODUCTION@proton.me",
   "Avalonian.MP.LogArchive@proton.me",

@@ -19,20 +19,20 @@ module "aws_organizations_account" {
 
   # Tags following tagging standards
   tags = {
-    Project         = "Awanggan"            # Set the specific project name
-    Environment     = each.key              # Or use an appropriate value
-    Owner           = "Avalon"              # Set the specific owner as needed
-    CostUnit        = "Alpha"               # Customize as per project requirements
-    Purpose         = "Infrastructure"      # Specify purpose
-    Compliance      = "NA"                  # Adjust if any compliance is needed
-    Automation      = "Terraform"           # Specify the provisioning tool
-    Retention       = "long-term"           # Set appropriate retention policy
-    LifeCycle       = "Active"              # Set lifecycle stage
-    Application     = "Bootstrap"           # Customize application name if relevant
-    CreationDate    = "20241106"            # Automatically captures the creation date
-    Schedule        = "AlwaysOn"            # Adjust based on operational needs
-    CustomSchedule  = "NA"                  # Specify custom schedule if applicable
-    EmailAddress    = each.value            # Using the email associated with the account
-    ContactPerson   = "Jester"              # Set to Jester as the point of contact
+    Project        = "Awanggan"       # Set the specific project name
+    Environment    = each.key         # Or use an appropriate value
+    Owner          = "Avalon"         # Set the specific owner as needed
+    CostUnit       = "Alpha"          # Customize as per project requirements
+    Purpose        = "Infrastructure" # Specify purpose
+    Compliance     = "NA"             # Adjust if any compliance is needed
+    Automation     = "Terraform"      # Specify the provisioning tool
+    Retention      = "long-term"      # Set appropriate retention policy
+    LifeCycle      = "Active"         # Set lifecycle stage
+    Application    = "Bootstrap"      # Customize application name if relevant
+    CreationDate   = "20241106"       # Automatically captures the creation date
+    Schedule       = "AlwaysOn"       # Adjust based on operational needs
+    CustomSchedule = "NA"             # Specify custom schedule if applicable
+    EmailAddress   = each.value       # Using the email associated with the account
+    ContactPerson  = "Jester"         # Set to Jester as the point of contact
   }
 }
