@@ -28,7 +28,7 @@ jobs:
     - name: Set up Terraform for Control Tower
       working-directory: ./aws/terraform/control-tower
       run: |
-        terraform init
+        terraform init -reconfigure
         terraform plan -var-file="../terraform.tfvars" -out=tfplan
 
   apply:
