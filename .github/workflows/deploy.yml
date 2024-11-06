@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Terraform Apply
     needs: plan # This ensures apply only runs if plan was successful
-    if: github.event_name == 'workflow_dispatch' # Only runs on manual trigger
+    if: github.event_name == 'workflow_dispatch' 
 
     permissions:
       id-token: write
