@@ -41,10 +41,16 @@ jobs:
         working-directory: ./aws/terraform/control-tower
         run: terraform plan -var-file="../terraform.tfvars" -out=tfplan
 
+      - name: Upload tfplan as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: ./aws/terraform/control-tower/tfplan
+
   apply:
     runs-on: ubuntu-latest
     name: Terraform Apply
-    needs: plan 
+    needs: plan # This ensures apply only runs if plan was successful
 
     permissions:
       id-token: write
@@ -59,6 +65,12 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Download tfplan artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: ./aws/terraform/control-tower
 
       - name: Apply Terraform Plan for Control Tower
         working-directory: ./aws/terraform/control-tower
