@@ -1,6 +1,9 @@
 name: "Bootstrap Build Step 1 - Create S3 and DynamoDB for Terraform State"
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch: # Allows manual triggering for terraform apply
 
 jobs:
