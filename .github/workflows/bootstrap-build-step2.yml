@@ -1,16 +1,20 @@
-name: "Bootstrap Build Step 1 - Create S3 and DynamoDB for Terraform State"
+name: "Bootstrap Build Step 2 - Create AWS Control Accounts"
 
 on:
-  workflow_dispatch: # Allows manual triggering for terraform apply
+  workflow_dispatch: # Allows manual triggering for Terraform apply
 
 jobs:
-  setup-infra:
+  setup-accounts:
     runs-on: ubuntu-latest
-    name: Setup S3 and DynamoDB for State Management
+    name: Create AWS Control Accounts
 
     permissions:
       id-token: write
       contents: read
+
+    # Ensure Step 1 has completed before running Step 2
+    environment:
+      name: bootstrap-step-1-completed
 
     steps:
       - name: Checkout code
@@ -35,14 +39,19 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        working-directory: ./aws/terraform/control-tower/s3
-        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+        working-directory: ./aws/terraform/control-tower
+        run: terraform plan -var-file="../terraform.tfvars" -out=tfplan
+
+      - name: Upload tfplan as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: ./aws/terraform/control-tower/tfplan
 
   apply:
     runs-on: ubuntu-latest
-    name: Terraform Apply S3 and DynamoDB
-    needs: setup-infra
-    if: github.event_name == 'workflow_dispatch' # Only runs on manual trigger
+    name: Terraform Apply
+    needs: setup-accounts # Ensures apply runs only after plan completes
 
     permissions:
       id-token: write
@@ -58,8 +67,14 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Apply Terraform Plan
-        working-directory: ./aws/terraform/control-tower/s3
+      - name: Download tfplan artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: ./aws/terraform/control-tower
+
+      - name: Apply Terraform Plan for Control Tower
+        working-directory: ./aws/terraform/control-tower
         run: |
           terraform init
           terraform apply -auto-approve "tfplan"

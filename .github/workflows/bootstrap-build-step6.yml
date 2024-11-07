@@ -1,0 +1,4 @@
+name: "Placeholder for Bootstrap Build Step 6"
+
+on:
+  workflow_dispatch: # Allows manual triggering, though it does nothing yet
