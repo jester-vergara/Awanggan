@@ -2,3 +2,10 @@ name: "Placeholder for Bootstrap Build Step 6"
 
 on:
   workflow_dispatch: # Allows manual triggering, though it does nothing yet
+
+jobs:
+  placeholder:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Placeholder
+        run: echo "This is a placeholder job."
