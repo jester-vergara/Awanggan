@@ -14,3 +14,10 @@ account_emails = [
   "Avalonian.MP.Logging@proton.me",
   "Avalonian.MP.SecOps@proton.me"
 ]
+
+common_tags = {
+  Project     = "Awanggan"
+  Environment = "Prod"
+  Owner       = "Avalon"
+  # Override other fields as necessary
+}

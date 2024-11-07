@@ -7,6 +7,6 @@ resource "aws_kms_key" "kms_key" {
 }
 
 resource "aws_kms_alias" "kms_alias" {
-  name          = "alias/${var.alias_name}"
+  name          = "alias/project-awanggan/${var.alias_name}"
   target_key_id = aws_kms_key.kms_key.id
 }

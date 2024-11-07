@@ -22,3 +22,15 @@ variable "availability_zones" {
   type        = list(string)
   description = "List of availability zones to use for the subnets"
 }
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags to apply to VPC and its resources"
+  default     = {}
+}
+
+variable "create_nat_gateways" {
+  type        = bool
+  description = "Whether to create NAT Gateways for private subnet internet access"
+  default     = false
+}

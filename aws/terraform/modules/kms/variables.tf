@@ -17,7 +17,7 @@ variable "deletion_window_in_days" {
 }
 
 variable "alias_name" {
-  description = "Alias name for the KMS key"
+  description = "Unique alias name for the KMS key"
   type        = string
 }
 

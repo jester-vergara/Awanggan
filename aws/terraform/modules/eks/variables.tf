@@ -42,3 +42,33 @@ variable "min_size" {
   type        = number
   description = "Minimum size of the EKS node group"
 }
+
+variable "tags" {
+  description = "Tags to apply to EKS resources"
+  type        = map(string)
+  default     = {}
+}
+
+variable "enable_logging" {
+  description = "Enable logging for the EKS cluster"
+  type        = bool
+  default     = false
+}
+
+variable "log_types" {
+  description = "Types of logs to enable for the EKS cluster"
+  type        = list(string)
+  default     = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+}
+
+variable "endpoint_private_access" {
+  description = "Indicates whether the EKS private API server endpoint is enabled"
+  type        = bool
+  default     = false
+}
+
+variable "endpoint_public_access" {
+  description = "Indicates whether the EKS public API server endpoint is enabled"
+  type        = bool
+  default     = true
+}
