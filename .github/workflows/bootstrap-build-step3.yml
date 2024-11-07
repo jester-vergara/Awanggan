@@ -1,8 +1,8 @@
-name: "Placeholder for Bootstrap Build Step 3"
+name: "Bootstrap Build Step 3 - Create Infra VPC"
 
 on:
   workflow_dispatch: # Allows manual triggering, though it does nothing yet
-  
+
 jobs:
   placeholder:
     runs-on: ubuntu-latest
