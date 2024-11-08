@@ -18,11 +18,6 @@ variable "iam_role_arn" {
 variable "tags" {
   description = "Tags to apply to the S3 bucket"
   type        = map(string)
-}
-
-variable "tags" {
-  description = "Tags to apply to the S3 bucket"
-  type        = map(string)
   default = {
     Project     = "Awanggan"
     Environment = "Shared"
