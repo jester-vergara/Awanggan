@@ -41,6 +41,12 @@ jobs:
         working-directory: ./aws/terraform/control-tower/s3
         run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
 
+      - name: Upload tfplan
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: ./aws/terraform/control-tower/s3/tfplan
+
   apply:
     runs-on: ubuntu-latest
     name: Terraform Apply S3 and DynamoDB
@@ -53,6 +59,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Download tfplan
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: ./aws/terraform/control-tower/s3
 
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
