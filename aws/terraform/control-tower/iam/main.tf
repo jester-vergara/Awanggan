@@ -1,5 +1,5 @@
 module "s3_dynamodb_iam_role" {
-  source    = "../modules/iam"
+  source    = "./../../modules/iam"
   role_name = var.role_name
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
