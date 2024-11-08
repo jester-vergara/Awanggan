@@ -72,9 +72,9 @@ jobs:
           name: tfplan-kms
           path: ./aws/terraform/control-tower/kms/tfplan
 
-  plan-s3-dynamodb:
+  plan-dynamodb:
     runs-on: ubuntu-latest
-    name: Terraform Plan for S3 and DynamoDB
+    name: Terraform Plan for DynamoDB
     needs: plan-kms
 
     permissions:
@@ -91,18 +91,51 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up Terraform for S3 and DynamoDB
+      - name: Set up Terraform for DynamoDB
+        working-directory: ./aws/terraform/control-tower/dynamodb
+        run: terraform init -reconfigure
+
+      - name: Terraform Plan for DynamoDB
+        working-directory: ./aws/terraform/control-tower/dynamodb
+        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+
+      - name: Upload tfplan for DynamoDB
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-dynamodb
+          path: ./aws/terraform/control-tower/dynamodb/tfplan
+
+  plan-s3:
+    runs-on: ubuntu-latest
+    name: Terraform Plan for S3
+    needs: plan-kms
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up Terraform for S3
         working-directory: ./aws/terraform/control-tower/s3
         run: terraform init -reconfigure
 
-      - name: Terraform Plan for S3 and DynamoDB
+      - name: Terraform Plan for S3
         working-directory: ./aws/terraform/control-tower/s3
         run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
 
       - name: Upload tfplan for S3 and DynamoDB
         uses: actions/upload-artifact@v3
         with:
-          name: tfplan-s3-dynamodb
+          name: tfplan-s3
           path: ./aws/terraform/control-tower/s3/tfplan
 
   apply:
@@ -131,10 +164,16 @@ jobs:
           name: tfplan-kms
           path: ./aws/terraform/control-tower/kms
 
-      - name: Download tfplan for S3 and DynamoDB
+      - name: Download tfplan for DynamoDB
         uses: actions/download-artifact@v3
         with:
-          name: tfplan-s3-dynamodb
+          name: tfplan-dynamodb
+          path: ./aws/terraform/control-tower/dynamodb
+
+      - name: Download tfplan for S3
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-s3
           path: ./aws/terraform/control-tower/s3
 
       - name: Configure AWS credentials with OIDC
