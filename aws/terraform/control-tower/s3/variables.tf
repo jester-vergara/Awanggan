@@ -40,3 +40,13 @@ variable "kms_key_id" {
   type        = string
   description = "The KMS key ID for encryption"
 }
+
+variable "account_emails" {
+  type        = list(string)
+  description = "List of account email addresses"
+}
+
+variable "account_names" {
+  type        = list(string)
+  description = "List of account names"
+}

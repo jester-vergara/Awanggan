@@ -25,3 +25,13 @@ variable "common_tags" {
     EmailAddress   = "contact@example.com"
   }
 }
+
+variable "account_emails" {
+  type        = list(string)
+  description = "List of account email addresses"
+}
+
+variable "account_names" {
+  type        = list(string)
+  description = "List of account names"
+}
