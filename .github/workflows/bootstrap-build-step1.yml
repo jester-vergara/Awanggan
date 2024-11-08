@@ -1,4 +1,4 @@
-name: "Bootstrap Build Step 1 - Create S3 and DynamoDB for Terraform State"
+name: "Bootstrap Step 1 Plan - Create S3 and DynamoDB for Terraform State"
 
 on:
   push:
@@ -45,7 +45,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Terraform Apply S3 and DynamoDB
     needs: setup-infra
-    if: github.event_name == 'workflow_dispatch' # Only runs on manual trigger
 
     permissions:
       id-token: write
