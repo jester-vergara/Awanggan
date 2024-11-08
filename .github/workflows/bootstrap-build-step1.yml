@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Allows manual triggering for terraform apply
+  workflow_dispatch: # Allows manual triggering for the apply step
 
 jobs:
   setup-infra:
@@ -26,19 +26,19 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Terraform
-        working-directory: ./aws/terraform/control-tower/s3  # Updated to correct directory
+        working-directory: ./aws/terraform/control-tower/s3
         run: terraform init -reconfigure
 
       - name: Check Terraform Formatting
-        working-directory: ./aws/terraform/control-tower/s3  # Updated to correct directory
+        working-directory: ./aws/terraform/control-tower/s3
         run: terraform fmt -check -recursive
 
       - name: Validate Terraform
-        working-directory: ./aws/terraform/control-tower/s3  # Updated to correct directory
+        working-directory: ./aws/terraform/control-tower/s3
         run: terraform validate
 
       - name: Terraform Plan
-        working-directory: ./aws/terraform/control-tower/s3  # Updated to correct directory
+        working-directory: ./aws/terraform/control-tower/s3
         run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
 
   apply:
@@ -62,7 +62,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Apply Terraform Plan
-        working-directory: ./aws/terraform/control-tower/s3  # Updated to correct directory
+        working-directory: ./aws/terraform/control-tower/s3
         run: |
           terraform init
           terraform apply -auto-approve "tfplan"
