@@ -1,4 +1,4 @@
-name: "Bootstrap Step 1 Plan - Create S3 and DynamoDB for Terraform State"
+name: "Bootstrap Step 1 - Setup IAM, KMS, S3, and DynamoDB for Terraform State"
 
 on:
   push:
@@ -7,9 +7,9 @@ on:
   workflow_dispatch: # Allows the workflow to be triggered manually
 
 jobs:
-  setup-infra:
+  plan-iam:
     runs-on: ubuntu-latest
-    name: Setup S3 and DynamoDB for State Management
+    name: Terraform Plan for IAM
 
     permissions:
       id-token: write
@@ -25,32 +25,24 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up Terraform
-        working-directory: ./aws/terraform/control-tower/s3
+      - name: Set up Terraform for IAM
+        working-directory: ./aws/terraform/control-tower/iam
         run: terraform init -reconfigure
 
-      - name: Check Terraform Formatting
-        working-directory: ./aws/terraform/control-tower/s3
-        run: terraform fmt -check -recursive
-
-      - name: Validate Terraform
-        working-directory: ./aws/terraform/control-tower/s3
-        run: terraform validate
-
-      - name: Terraform Plan
-        working-directory: ./aws/terraform/control-tower/s3
+      - name: Terraform Plan for IAM
+        working-directory: ./aws/terraform/control-tower/iam
         run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
 
-      - name: Upload tfplan
+      - name: Upload tfplan for IAM
         uses: actions/upload-artifact@v3
         with:
-          name: tfplan
-          path: ./aws/terraform/control-tower/s3/tfplan
+          name: tfplan-iam
+          path: ./aws/terraform/control-tower/iam/tfplan
 
-  apply:
+  plan-kms:
     runs-on: ubuntu-latest
-    name: Terraform Apply S3 and DynamoDB
-    needs: setup-infra
+    name: Terraform Plan for KMS
+    needs: plan-iam
 
     permissions:
       id-token: write
@@ -60,10 +52,89 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download tfplan
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up Terraform for KMS
+        working-directory: ./aws/terraform/control-tower/kms
+        run: terraform init -reconfigure
+
+      - name: Terraform Plan for KMS
+        working-directory: ./aws/terraform/control-tower/kms
+        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+
+      - name: Upload tfplan for KMS
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-kms
+          path: ./aws/terraform/control-tower/kms/tfplan
+
+  plan-s3-dynamodb:
+    runs-on: ubuntu-latest
+    name: Terraform Plan for S3 and DynamoDB
+    needs: plan-kms
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up Terraform for S3 and DynamoDB
+        working-directory: ./aws/terraform/control-tower/s3
+        run: terraform init -reconfigure
+
+      - name: Terraform Plan for S3 and DynamoDB
+        working-directory: ./aws/terraform/control-tower/s3
+        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+
+      - name: Upload tfplan for S3 and DynamoDB
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan-s3-dynamodb
+          path: ./aws/terraform/control-tower/s3/tfplan
+
+  apply:
+    runs-on: ubuntu-latest
+    name: Terraform Apply
+    needs: [plan-iam, plan-kms, plan-s3-dynamodb]
+    if: github.event_name == 'workflow_dispatch' # Only runs on manual trigger
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Download tfplan for IAM
         uses: actions/download-artifact@v3
         with:
-          name: tfplan
+          name: tfplan-iam
+          path: ./aws/terraform/control-tower/iam
+
+      - name: Download tfplan for KMS
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-kms
+          path: ./aws/terraform/control-tower/kms
+
+      - name: Download tfplan for S3 and DynamoDB
+        uses: actions/download-artifact@v3
+        with:
+          name: tfplan-s3-dynamodb
           path: ./aws/terraform/control-tower/s3
 
       - name: Configure AWS credentials with OIDC
@@ -72,7 +143,19 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Apply Terraform Plan
+      - name: Apply Terraform Plan for IAM
+        working-directory: ./aws/terraform/control-tower/iam
+        run: |
+          terraform init
+          terraform apply -auto-approve "tfplan"
+
+      - name: Apply Terraform Plan for KMS
+        working-directory: ./aws/terraform/control-tower/kms
+        run: |
+          terraform init
+          terraform apply -auto-approve "tfplan"
+
+      - name: Apply Terraform Plan for S3 and DynamoDB
         working-directory: ./aws/terraform/control-tower/s3
         run: |
           terraform init

@@ -33,7 +33,7 @@ resource "aws_s3_bucket_policy" "state_bucket_policy" {
       {
         Effect = "Allow"
         Principal = {
-          AWS = var.iam_role_arn # Use IAM role ARN from the IAM module
+          AWS = var.iam_role_arn != "" ? var.iam_role_arn : "arn:aws:iam::111122223333:root" # Replace with a default or condition
         }
         Action = "s3:*"
         Resource = [
@@ -44,4 +44,5 @@ resource "aws_s3_bucket_policy" "state_bucket_policy" {
     ]
   })
 }
+
 
