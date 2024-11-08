@@ -25,3 +25,4 @@ common_tags = {
 s3_bucket_name = "awanggan-github-bootstrap-terraform-state-bucket"
 dynamodb_table_name = "terraform-state-lock"
 account_id = "571600861891"
+kms_key_id          = "arn:aws:kms:your-region:account-id:key/key-id"

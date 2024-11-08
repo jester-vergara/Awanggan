@@ -13,3 +13,9 @@ variable "tags" {
     Purpose     = "State Locking"
   }
 }
+
+variable "kms_key_id" {
+  description = "The ARN of the KMS key to use for encryption"
+  type        = string
+  default     = ""
+}

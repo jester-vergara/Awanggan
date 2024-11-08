@@ -8,11 +8,10 @@ resource "aws_dynamodb_table" "terraform_state_lock" {
     type = "S"
   }
 
-  tags = var.tags
+  server_side_encryption {
+    enabled     = true
+    kms_key_arn = var.kms_key_id != "" ? var.kms_key_id : null
+  }
 
-  # Uncomment if TTL is desired
-  # ttl {
-  #   attribute_name = "ExpirationTime"
-  #   enabled        = true
-  # }
+  tags = var.tags
 }

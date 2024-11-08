@@ -4,6 +4,12 @@ variable "dynamodb_table_name" {
   default     = "terraform-state-lock"
 }
 
+variable "kms_key_id" {
+  description = "The ARN of the KMS key to use for encryption"
+  type        = string
+  default     = ""
+}
+
 variable "common_tags" {
   description = "Common tags to apply to all resources"
   type        = map(string)
