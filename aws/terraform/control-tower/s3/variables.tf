@@ -1,7 +1,7 @@
 variable "s3_bucket_name" {
   description = "Name of the S3 bucket for Terraform state storage"
   type        = string
-  default     = "gitlab-terraform-state-bucket"
+  default     = "awanggan-github-bootstrap-terraform-state-bucket"
 }
 
 variable "common_tags" {
