@@ -141,7 +141,7 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     name: Terraform Apply
-    needs: [plan-iam, plan-kms, plan-s3-dynamodb]
+    needs: [plan-iam, plan-kms, plan-dynamodb, plan-s3]
     if: github.event_name == 'workflow_dispatch' # Only runs on manual trigger
 
     permissions:
