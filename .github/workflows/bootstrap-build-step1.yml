@@ -108,7 +108,7 @@ jobs:
   plan-s3:
     runs-on: ubuntu-latest
     name: Terraform Plan for S3
-    needs: plan-kms
+    needs: plan-dynamodb
 
     permissions:
       id-token: write
