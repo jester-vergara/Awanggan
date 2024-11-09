@@ -1,19 +1,13 @@
-variable "alias_name" {
-  description = "Alias name for the KMS key"
+variable "dynamodb_table_name" {
+  description = "Name of the DynamoDB table for Terraform state locking"
   type        = string
-  default     = "awanggan-kms-key"
+  default     = "github-terraform-state-lock"
 }
 
-variable "enable_key_rotation" {
-  description = "Enable automatic key rotation for the KMS key"
-  type        = bool
-  default     = true
-}
-
-variable "deletion_window_in_days" {
-  description = "Number of days before deletion after scheduled deletion of KMS key"
-  type        = number
-  default     = 30
+variable "kms_key_id" {
+  description = "The ARN of the KMS key to use for encryption"
+  type        = string
+  default     = ""
 }
 
 variable "common_tags" {
@@ -46,4 +40,9 @@ variable "account_emails" {
 variable "account_names" {
   type        = list(string)
   description = "List of account names"
+}
+
+variable "s3_bucket_name" {
+  description = "The S3 bucket name for Terraform state storage"
+  type        = string
 }

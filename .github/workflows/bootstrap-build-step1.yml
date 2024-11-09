@@ -31,7 +31,7 @@ jobs:
 
       - name: Terraform Plan for IAM
         working-directory: ./aws/terraform/control-tower/iam
-        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
 
       - name: Upload tfplan for IAM
         uses: actions/upload-artifact@v3
@@ -64,7 +64,7 @@ jobs:
 
       - name: Terraform Plan for KMS
         working-directory: ./aws/terraform/control-tower/kms
-        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
 
       - name: Upload tfplan for KMS
         uses: actions/upload-artifact@v3
@@ -97,7 +97,7 @@ jobs:
 
       - name: Terraform Plan for DynamoDB
         working-directory: ./aws/terraform/control-tower/dynamodb
-        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
 
       - name: Upload tfplan for DynamoDB
         uses: actions/upload-artifact@v3
@@ -130,7 +130,7 @@ jobs:
 
       - name: Terraform Plan for S3
         working-directory: ./aws/terraform/control-tower/s3
-        run: terraform plan -var-file="../../terraform.tfvars" -out=tfplan
+        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
 
       - name: Upload tfplan for S3 and DynamoDB
         uses: actions/upload-artifact@v3
