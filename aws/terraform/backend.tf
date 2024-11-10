@@ -1,9 +1,11 @@
 terraform {
   backend "s3" {
-    bucket         = "<your-bootstrap-s3-bucket-name>"
-    key            = "bootstrap/terraform.tfstate"
-    region         = "<bucket-region>"
-    dynamodb_table = "<your-bootstrap-dynamodb-table-name>"
-    encrypt        = true
+    bucket         = var.s3_bucket
+    key            = "terraform/state/${var.environment}/${var.environment}.tfstate"
+    region         = var.aws_region
+    dynamodb_table = var.dynamodb_table
+    encrypt        = var.encrypt_state
+    profile        = var.aws_profile
+    workspace_key_prefix = var.workspace_key_prefix
   }
 }
