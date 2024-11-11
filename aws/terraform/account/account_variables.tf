@@ -8,11 +8,13 @@ variable "region" {
 }
 
 variable "account_names" {
-  type = list(string)
+  type    = list(string)
+  default = ""
 }
 
 variable "account_emails" {
-  type = list(string)
+  type    = list(string)
+  default = ""
 }
 
 variable "iam_user_access_to_billing" {
@@ -25,4 +27,10 @@ variable "close_on_deletion" {
   description = "Whether to close the account when the resource is destroyed."
   type        = bool
   default     = false
+}
+
+# global_variables.tf
+variable "environment" {
+  type    = string
+  default = ""
 }
