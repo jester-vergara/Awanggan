@@ -45,7 +45,7 @@ jobs:
 
       - name: Terraform Plan create Control Tower resources
         working-directory: ./aws/terraform/
-        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
+        run: terraform plan -var-file="control-tower.tfvars" -out=tfplan
 
       # - name: Terraform Import Organization
       #   working-directory: ./aws/terraform/account
