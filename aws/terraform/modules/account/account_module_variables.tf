@@ -1,9 +1,3 @@
-# global_variables.tf
-variable "environment" {
-  type    = string
-  default = "control-tower"  # Or "shared" based on the target environment
-}
-
 # Account name
 variable "account_name" {
   description = "The name of the AWS account to be created."
