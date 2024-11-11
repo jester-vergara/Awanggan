@@ -25,6 +25,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
+      - name: Debug Backend Key Path
+        working-directory: ./aws/terraform/
+        run: |
+          echo "Backend Key Path: terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate"
+
       - name: Set up Terraform Init Control Tower with Backend Config
         working-directory: ./aws/terraform/
         run: |
@@ -35,6 +40,7 @@ jobs:
             -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
             -backend-config="encrypt=true" \
             -reconfigure
+
 
       - name: Create and Select Terraform Workspace
         working-directory: ./aws/terraform/
