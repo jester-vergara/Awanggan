@@ -9,7 +9,7 @@ on:
 jobs:
   plan-iam:
     runs-on: ubuntu-latest
-    name: Terraform Plan for IAM
+    name: Terraform Import Bootstrap
 
     permissions:
       id-token: write
@@ -25,117 +25,11 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up Terraform for IAM
-        working-directory: ./aws/terraform/control-tower/iam
+      - name: Set up Terraform Init create Control Tower accounts
+        working-directory: ./aws/terraform/control-tower/account
         run: terraform init -reconfigure
 
-      - name: Terraform Plan for IAM
-        working-directory: ./aws/terraform/control-tower/iam
-        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
-
-      - name: Upload tfplan for IAM
-        uses: actions/upload-artifact@v3
-        with:
-          name: tfplan-iam
-          path: ./aws/terraform/control-tower/iam/tfplan
-
-  plan-kms:
-    runs-on: ubuntu-latest
-    name: Terraform Plan for KMS
-    needs: plan-iam
-
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Set up Terraform for KMS
-        working-directory: ./aws/terraform/control-tower/kms
-        run: terraform init -reconfigure
-
-      - name: Terraform Plan for KMS
-        working-directory: ./aws/terraform/control-tower/kms
-        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
-
-      - name: Upload tfplan for KMS
-        uses: actions/upload-artifact@v3
-        with:
-          name: tfplan-kms
-          path: ./aws/terraform/control-tower/kms/tfplan
-
-  plan-dynamodb:
-    runs-on: ubuntu-latest
-    name: Terraform Plan for DynamoDB
-    needs: plan-kms
-
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Set up Terraform for DynamoDB
-        working-directory: ./aws/terraform/control-tower/dynamodb
-        run: terraform init -reconfigure
-
-      - name: Terraform Plan for DynamoDB
-        working-directory: ./aws/terraform/control-tower/dynamodb
-        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
-
-      - name: Upload tfplan for DynamoDB
-        uses: actions/upload-artifact@v3
-        with:
-          name: tfplan-dynamodb
-          path: ./aws/terraform/control-tower/dynamodb/tfplan
-
-  plan-s3:
-    runs-on: ubuntu-latest
-    name: Terraform Plan for S3
-    needs: plan-dynamodb
-
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Set up Terraform for S3
-        working-directory: ./aws/terraform/control-tower/s3
-        run: terraform init -reconfigure
-
-      - name: Terraform Plan for S3
-        working-directory: ./aws/terraform/control-tower/s3
-        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
-
-      - name: Upload tfplan for S3 and DynamoDB
-        uses: actions/upload-artifact@v3
-        with:
-          name: tfplan-s3
-          path: ./aws/terraform/control-tower/s3/tfplan
-
+      - name: Terraform Import Control Tower accounts
+        working-directory: ./aws/terraform/account
+        run: terraform import
 
