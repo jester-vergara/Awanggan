@@ -56,4 +56,3 @@ variable "s3_bucket" {
   type    = string
   default = "awanggan-github-bootstrap-terraform-state-bucket" # S3 bucket name for state storage
 }
-
