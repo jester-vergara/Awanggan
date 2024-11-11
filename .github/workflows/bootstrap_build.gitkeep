@@ -1,4 +1,4 @@
-name: "Bootstrap Step 1 - Setup IAM, KMS, S3, and DynamoDB for Terraform State"
+name: "Bootstrap - resources inside Control Tower and Shared account"
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Terraform for IAM
@@ -55,7 +55,7 @@ jobs:
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Terraform for KMS
@@ -88,7 +88,7 @@ jobs:
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Terraform for DynamoDB
@@ -121,7 +121,7 @@ jobs:
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set up Terraform for S3
