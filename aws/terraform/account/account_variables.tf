@@ -9,12 +9,12 @@ variable "region" {
 
 variable "account_names" {
   type    = list(string)
-  default = ""
+  default = []
 }
 
 variable "account_emails" {
   type    = list(string)
-  default = ""
+  default = []
 }
 
 variable "iam_user_access_to_billing" {
