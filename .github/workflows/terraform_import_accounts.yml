@@ -1,0 +1,54 @@
+name: "Terraform Import"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows the workflow to be triggered manually
+
+jobs:
+  plan-iam:
+    runs-on: ubuntu-latest
+    name: Terraform Import Bootstrap
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up Terraform Init create Control Tower accounts
+        working-directory: ./aws/terraform/account
+        run: terraform init -reconfigure
+
+      - name: Terraform Import Control Tower accounts
+        working-directory: ./aws/terraform/account
+        run: |
+          # Define the accounts and their IDs
+          declare -A accounts=(
+            ["Audit"]="920372985177"
+            ["ControlTower"]="571600861891"
+            ["Dev"]="448049827694"
+            ["LogArchive"]="324037285298"
+            ["Logging"]="977098986447"
+            ["Prod"]="585768161105"
+            ["QA"]="047719616326"
+            ["Sandbox"]="774305606885"
+            ["SecOps"]="050752649836"
+            ["Shared"]="221082169697"
+          )
+
+          # Loop over each account and import
+          for account_name in "${!accounts[@]}"; do
+            account_id="${accounts[$account_name]}"
+            echo "Importing account $account_name with ID $account_id"
+            terraform import "module.aws_organizations_account[\"$account_name\"].aws_organizations_account.this" "$account_id"
+          done
