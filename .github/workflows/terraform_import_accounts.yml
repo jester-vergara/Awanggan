@@ -89,12 +89,12 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Importing AWS KMS Keys"
-          # Import the S3 KMS key
-          terraform import module.s3_kms_key.aws_kms_key.kms_key "arn:aws:kms:region:account-id:key/key-id"
-          # Import the DynamoDB KMS key
-          terraform import module.dynamodb_kms_key.aws_kms_key.kms_key "arn:aws:kms:region:account-id:key/key-id"
-          # Import the alias for the S3 KMS key
+          # Replace 'region', 'account-id', and 'key-id' with actual values from AWS
+          terraform import module.s3_kms_key.aws_kms_key.kms_key "arn:aws:kms:ap-southeast-1:123456789012:key/09cd2274-112b-489e-b468-7b23008ac07a"
+          terraform import module.dynamodb_kms_key.aws_kms_key.kms_key "arn:aws:kms:ap-southeast-1:123456789012:key/22413008-c2cb-45ef-a0ac-2dc70a387fac"
+
+          # Replace the alias with actual aliases from AWS
           terraform import module.s3_kms_key.aws_kms_alias.kms_alias "alias/project-awanggan/awanggan-s3-kms-key"
-          # Import the alias for the DynamoDB KMS key
           terraform import module.dynamodb_kms_key.aws_kms_alias.kms_alias "alias/project-awanggan/awanggan-dynamodb-kms-key"
+
 
