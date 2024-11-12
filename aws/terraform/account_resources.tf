@@ -1,7 +1,13 @@
 resource "aws_organizations_organization" "org" {
-  aws_service_access_principals = ["controltower.amazonaws.com"]
-  feature_set                   = "ALL"
+  aws_service_access_principals = [
+    "controltower.amazonaws.com",
+    "account.amazonaws.com",
+    "cost-optimization-hub.bcm.amazonaws.com",
+    "sso.amazonaws.com"
+  ]
+  feature_set = "ALL"
 }
+
 
 
 module "aws_organizations_account" {
