@@ -1,4 +1,4 @@
-name: "Terraform Bootstrap"
+name: "Terraform Import"
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   plan-iam:
     runs-on: ubuntu-latest
-    name: Terraform Plan and Apply Bootstrap
+    name: Terraform Import Bootstrap
 
     permissions:
       id-token: write
@@ -25,17 +25,54 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up Terraform to create Control Tower accounts
-        working-directory: ./aws/terraform/control-tower/account
-        run: terraform init -reconfigure
+      - name: Set up Terraform Init Control Tower with Backend Config
+        working-directory: ./aws/terraform/
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ vars.S3_BUCKET }}" \
+            -backend-config="key=terraform/state/${{ vars.CONTROL_TOWER_ENVIRONMENT }}/${{ vars.CONTROL_TOWER_ENVIRONMENT }}.tfstate" \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
+            -backend-config="encrypt=true" \
+            -reconfigure
 
-      - name: Terraform Plan create Control Tower accounts
-        working-directory: ./aws/terraform/account
-        run: terraform plan -var-file="../control-tower.tfvars" -out=tfplan
 
-      - name: Upload tfplan for IAM
-        uses: actions/upload-artifact@v3
-        with:
-          name: tfplan-iam
-          path: ./aws/terraform/account/tfplan
+      - name: Create and Select Terraform Workspace
+        working-directory: ./aws/terraform/
+        run: |
+          terraform workspace list | grep -q "control_tower" || terraform workspace new control_tower
+          terraform workspace select control_tower
 
+      - name: Terraform Plan create Control Tower resources
+        working-directory: ./aws/terraform/
+        run: terraform plan -var-file="control-tower.tfvars" -out=tfplan
+
+      - name: Terraform Import Organization
+        working-directory: ./aws/terraform/
+        run: |
+          echo "Importing AWS Organization"
+          terraform import aws_organizations_organization.org o-ly1bfwh8zk
+
+      - name: Terraform Import Control Tower accounts
+        working-directory: ./aws/terraform/
+        run: |
+          # Define the accounts and their IDs
+          declare -A accounts=(
+            ["Audit"]="920372985177"
+            ["ControlTower"]="571600861891"
+            ["Dev"]="448049827694"
+            ["LogArchive"]="324037285298"
+            ["Logging"]="977098986447"
+            ["Prod"]="585768161105"
+            ["QA"]="047719616326"
+            ["Sandbox"]="774305606885"
+            ["SecOps"]="050752649836"
+            ["Shared"]="221082169697"
+          )
+
+          # Loop over each account and import
+          for account_name in "${!accounts[@]}"; do
+            account_id="${accounts[$account_name]}"
+            echo "Importing account $account_name with ID $account_id"
+            terraform import "module.aws_organizations_account[\"$account_name\"].aws_organizations_account.this" "$account_id"
+          done

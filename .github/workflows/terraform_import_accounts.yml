@@ -48,13 +48,13 @@ jobs:
         run: terraform plan -var-file="control-tower.tfvars" -out=tfplan
 
       - name: Terraform Import Organization
-        working-directory: ./aws/terraform/account
+        working-directory: ./aws/terraform/
         run: |
           echo "Importing AWS Organization"
           terraform import aws_organizations_organization.org o-ly1bfwh8zk
 
       - name: Terraform Import Control Tower accounts
-        working-directory: ./aws/terraform/account
+        working-directory: ./aws/terraform/
         run: |
           # Define the accounts and their IDs
           declare -A accounts=(
