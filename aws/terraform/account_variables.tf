@@ -20,7 +20,7 @@ variable "account_emails" {
 variable "iam_user_access_to_billing" {
   description = "Specifies if IAM users are allowed access to the AWS Billing and Cost Management console."
   type        = string
-  default     = "DENY"
+  default     = "ALLOW"
 }
 
 variable "close_on_deletion" {
