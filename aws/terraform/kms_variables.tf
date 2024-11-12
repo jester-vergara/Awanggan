@@ -1,3 +1,15 @@
+variable "s3_kms_key_alias" {
+  description = "Alias for the S3 KMS key"
+  type        = string
+  default     = "alias/project-awanggan/awanggan-s3-kms-key"
+}
+
+variable "dynamodb_kms_key_alias" {
+  description = "Alias for the DynamoDB KMS key"
+  type        = string
+  default     = "alias/project-awanggan/awanggan-dynamodb-kms-key"
+}
+
 variable "s3_kms_key_description" {
   description = "Description for the S3 KMS key"
   type        = string
