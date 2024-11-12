@@ -28,9 +28,3 @@ variable "close_on_deletion" {
   type        = bool
   default     = false
 }
-
-# global_variables.tf
-variable "environment" {
-  type    = string
-  default = ""
-}
