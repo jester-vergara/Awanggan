@@ -28,3 +28,10 @@ variable "close_on_deletion" {
   type        = bool
   default     = false
 }
+
+variable "account_id" {
+  type        = string
+  description = "The AWS account ID"
+  default     = ""
+}
+
