@@ -1,3 +1,8 @@
+variable "kms_key_alias" {
+  description = "Alias for the KMS key"
+  type        = string
+}
+
 variable "kms_key_description" {
   description = "Description for the KMS key"
   type        = string
