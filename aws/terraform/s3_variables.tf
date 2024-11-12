@@ -3,10 +3,3 @@ variable "s3_bucket_name" {
   type        = string
   default     = "awanggan-github-bootstrap-terraform-state-bucket"
 }
-
-variable "account_id" {
-  type        = string
-  description = "The AWS account ID"
-  default     = ""
-}
-

@@ -4,6 +4,6 @@ module "s3" {
   kms_key_id     = var.kms_key_id
   #iam_role_arn   = module.iam.iam_role_arn
   #depends_on     = [module.iam]
-  tags           = var.common_tags
+  tags = var.common_tags
 }
 
