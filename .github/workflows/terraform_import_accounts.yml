@@ -84,3 +84,17 @@ jobs:
       #   run: |
       #     echo "Importing AWS account"
       #     terraform import 'module.aws_organizations_account["Audit"].aws_organizations_account.this' "920372985177"
+
+      - name: Terraform Import KMS
+        working-directory: ./aws/terraform/
+        run: |
+          echo "Importing AWS KMS Keys"
+          # Import the S3 KMS key
+          terraform import module.s3_kms_key.aws_kms_key.kms_key "arn:aws:kms:region:account-id:key/key-id"
+          # Import the DynamoDB KMS key
+          terraform import module.dynamodb_kms_key.aws_kms_key.kms_key "arn:aws:kms:region:account-id:key/key-id"
+          # Import the alias for the S3 KMS key
+          terraform import module.s3_kms_key.aws_kms_alias.kms_alias "alias/project-awanggan/awanggan-s3-kms-key"
+          # Import the alias for the DynamoDB KMS key
+          terraform import module.dynamodb_kms_key.aws_kms_alias.kms_alias "alias/project-awanggan/awanggan-dynamodb-kms-key"
+
