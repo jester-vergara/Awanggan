@@ -9,30 +9,3 @@ variable "kms_key_id" {
   type        = string
   default     = ""
 }
-
-variable "common_tags" {
-  description = "Common tags to apply to all resources"
-  type        = map(string)
-  default = {
-    Project        = "Awanggan"
-    Environment    = "Shared"
-    Owner          = "Avalon"
-    CostUnit       = "Alpha"
-    Purpose        = "Infrastructure"
-    Compliance     = "NA"
-    Automation     = "Terraform"
-    Retention      = "long-term"
-    LifeCycle      = "Active"
-    Application    = "Bootstrap"
-    CreationDate   = "20241106"
-    Schedule       = "AlwaysOn"
-    CustomSchedule = "NA"
-    ContactPerson  = "Jester"
-    EmailAddress   = "contact@example.com"
-  }
-}
-
-variable "s3_bucket_name" {
-  description = "The S3 bucket name for Terraform state storage"
-  type        = string
-}

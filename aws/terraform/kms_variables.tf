@@ -16,24 +16,3 @@ variable "deletion_window_in_days" {
   default     = 30
 }
 
-variable "common_tags" {
-  description = "Common tags to apply to all resources"
-  type        = map(string)
-  default = {
-    Project        = "Awanggan"
-    Environment    = "Shared"
-    Owner          = "Avalon"
-    CostUnit       = "Alpha"
-    Purpose        = "Infrastructure"
-    Compliance     = "NA"
-    Automation     = "Terraform"
-    Retention      = "long-term"
-    LifeCycle      = "Active"
-    Application    = "Bootstrap"
-    CreationDate   = "20241106"
-    Schedule       = "AlwaysOn"
-    CustomSchedule = "NA"
-    ContactPerson  = "Jester"
-    EmailAddress   = "contact@example.com"
-  }
-}
