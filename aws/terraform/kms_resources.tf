@@ -1,8 +1,17 @@
-module "kms_key" {
-  source                  = "./modules/kms"
-  description             = "KMS key for encryption of S3 bucket and DynamoDB table for Project Awanggan"
-  alias_name              = var.alias_name
-  enable_key_rotation     = var.enable_key_rotation
-  deletion_window_in_days = var.deletion_window_in_days
-  tags                    = var.common_tags
+module "s3_kms_key" {
+  source              = "./modules/kms"
+  kms_key_alias       = var.s3_kms_key_alias
+  kms_key_description = var.s3_kms_key_description
+  key_admins          = var.kms_key_admins
+  key_users           = var.kms_key_users
+  common_tags         = var.common_tags
+}
+
+module "dynamodb_kms_key" {
+  source              = "./modules/kms"
+  kms_key_alias       = var.dynamodb_kms_key_alias
+  kms_key_description = var.dynamodb_kms_key_description
+  key_admins          = var.kms_key_admins
+  key_users           = var.kms_key_users
+  common_tags         = var.common_tags
 }

@@ -1,28 +1,24 @@
-variable "description" {
-  description = "Description of the KMS key"
-  type        = string
-  default     = "KMS key for Project Awanggan"
-}
-
-variable "enable_key_rotation" {
-  description = "Enable automatic key rotation"
-  type        = bool
-  default     = true
-}
-
-variable "deletion_window_in_days" {
-  description = "Number of days before deletion after scheduled deletion"
-  type        = number
-  default     = 30
-}
-
-variable "alias_name" {
-  description = "Unique alias name for the KMS key"
+variable "kms_key_alias" {
+  description = "Alias for the KMS key"
   type        = string
 }
 
-variable "tags" {
-  description = "Tags for the KMS key"
+variable "kms_key_description" {
+  description = "Description for the KMS key"
+  type        = string
+}
+
+variable "key_admins" {
+  description = "List of IAM users or roles to be KMS key administrators"
+  type        = list(string)
+}
+
+variable "key_users" {
+  description = "List of IAM users or roles that can use the KMS key"
+  type        = list(string)
+}
+
+variable "common_tags" {
+  description = "Tags to apply to the KMS resources"
   type        = map(string)
-  default     = {}
 }

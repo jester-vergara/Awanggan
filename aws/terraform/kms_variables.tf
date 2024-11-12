@@ -1,23 +1,35 @@
-variable "alias_name" {
-  description = "Alias name for the KMS key"
+variable "s3_kms_key_alias" {
+  description = "Alias for the S3 KMS key"
   type        = string
-  default     = "awanggan-dynamodb-kms-key"
+  default     = "alias/project-awanggan/awanggan-s3-kms-key"
 }
 
-variable "enable_key_rotation" {
-  description = "Enable automatic key rotation for the KMS key"
-  type        = bool
-  default     = true
-}
-
-variable "deletion_window_in_days" {
-  description = "Number of days before deletion after scheduled deletion of KMS key"
-  type        = number
-  default     = 30
-}
-
-variable "kms_key_id" {
+variable "dynamodb_kms_key_alias" {
+  description = "Alias for the DynamoDB KMS key"
   type        = string
-  description = "The KMS key ID for encryption"
-  default     = ""
+  default     = "alias/project-awanggan/awanggan-dynamodb-kms-key"
+}
+
+variable "s3_kms_key_description" {
+  description = "Description for the S3 KMS key"
+  type        = string
+  default     = "KMS key for encryption of the S3 bucket for Project Awanggan"
+}
+
+variable "dynamodb_kms_key_description" {
+  description = "Description for the DynamoDB KMS key"
+  type        = string
+  default     = "KMS key for encryption of the DynamoDB table for Project Awanggan"
+}
+
+variable "kms_key_admins" {
+  description = "List of IAM users or roles to be KMS key administrators"
+  type        = list(string)
+  default     = ["awanggan-admin-00", "GitHubAssumeRoleAwanggan"]
+}
+
+variable "kms_key_users" {
+  description = "List of IAM users or roles that can use the KMS key"
+  type        = list(string)
+  default     = ["awanggan-admin-00", "GitHubAssumeRoleAwanggan"]
 }
