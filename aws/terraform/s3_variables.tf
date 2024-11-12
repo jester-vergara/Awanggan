@@ -7,5 +7,6 @@ variable "s3_bucket_name" {
 variable "account_id" {
   type        = string
   description = "The AWS account ID"
+  default     = ""
 }
 

@@ -3,4 +3,3 @@ variable "dynamodb_table_name" {
   type        = string
   default     = "github-terraform-state-lock"
 }
-
