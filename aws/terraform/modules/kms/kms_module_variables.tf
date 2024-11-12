@@ -1,8 +1,3 @@
-variable "kms_key_alias" {
-  description = "Alias for the KMS key"
-  type        = string
-}
-
 variable "kms_key_description" {
   description = "Description for the KMS key"
   type        = string
@@ -21,4 +16,9 @@ variable "key_users" {
 variable "common_tags" {
   description = "Tags to apply to the KMS resources"
   type        = map(string)
+}
+
+variable "kms_key_alias" {
+  description = "Alias for the KMS key"
+  type        = string
 }
