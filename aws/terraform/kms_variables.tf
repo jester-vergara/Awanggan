@@ -16,3 +16,7 @@ variable "deletion_window_in_days" {
   default     = 30
 }
 
+variable "kms_key_id" {
+  type        = string
+  description = "The KMS key ID for encryption"
+}
