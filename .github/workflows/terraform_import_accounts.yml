@@ -82,4 +82,4 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Importing AWS account"
-          terraform import module.aws_organizations_account["Audit"].aws_organizations_account.this 
+          terraform import module.aws_organizations_account["Audit"].aws_organizations_account.this 920372985177
