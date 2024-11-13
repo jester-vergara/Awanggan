@@ -8,7 +8,3 @@ variable "kms_key_id" {
   type        = string
 }
 
-variable "tags" {
-  description = "Tags to apply to S3 bucket"
-  type        = map(string)
-}
