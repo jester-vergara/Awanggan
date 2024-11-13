@@ -1,9 +1,9 @@
-output "dynamodb_table_name" {
-  description = "The name of the DynamoDB table for state locking"
-  value       = aws_dynamodb_table.terraform_state_lock.name
+output "table_name" {
+  description = "The name of the DynamoDB table"
+  value       = aws_dynamodb_table.this.name
 }
 
-output "dynamodb_table_arn" {
-  description = "The ARN of the DynamoDB table for state locking"
-  value       = aws_dynamodb_table.terraform_state_lock.arn
+output "table_arn" {
+  description = "The ARN of the DynamoDB table"
+  value       = aws_dynamodb_table.this.arn
 }

@@ -1,16 +1,21 @@
-resource "aws_dynamodb_table" "terraform_state_lock" {
-  name         = var.dynamodb_table_name
-  billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "LockID"
+resource "aws_dynamodb_table" "this" {
+  name         = var.table_name
+  billing_mode = "PROVISIONED"
+  read_capacity  = var.read_capacity
+  write_capacity = var.write_capacity
+  hash_key       = var.partition_key
 
-  attribute {
-    name = "LockID"
-    type = "S"
+  dynamic "attribute" {
+    for_each = var.sort_key != null ? [var.sort_key] : []
+    content {
+      name = var.sort_key
+      type = "S"
+    }
   }
 
   server_side_encryption {
     enabled     = true
-    kms_key_arn = var.kms_key_id != "" ? var.kms_key_id : null
+    kms_key_arn = var.kms_key_id
   }
 
   tags = var.tags
