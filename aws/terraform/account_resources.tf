@@ -12,7 +12,6 @@ resource "aws_organizations_organization" "org" {
 
 module "aws_organizations_account" {
   source = "./modules/account"
-  count  = terraform.workspace == "control-tower" ? 1 : 0
 
   for_each = zipmap(var.account_names, var.account_emails)
 
