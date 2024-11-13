@@ -12,19 +12,19 @@ resource "aws_kms_key" "kms_key" {
           AWS = var.key_admins
         }
         Action = [
-          "kms:Create*", 
-          "kms:Describe*", 
-          "kms:Enable*", 
-          "kms:List*", 
-          "kms:Put*", 
-          "kms:Update*", 
-          "kms:Revoke*", 
-          "kms:Disable*", 
-          "kms:Get*", 
-          "kms:Delete*", 
-          "kms:TagResource", 
-          "kms:UntagResource", 
-          "kms:ScheduleKeyDeletion", 
+          "kms:Create*",
+          "kms:Describe*",
+          "kms:Enable*",
+          "kms:List*",
+          "kms:Put*",
+          "kms:Update*",
+          "kms:Revoke*",
+          "kms:Disable*",
+          "kms:Get*",
+          "kms:Delete*",
+          "kms:TagResource",
+          "kms:UntagResource",
+          "kms:ScheduleKeyDeletion",
           "kms:CancelKeyDeletion"
         ]
         Resource = "*"
