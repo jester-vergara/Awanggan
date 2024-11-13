@@ -31,10 +31,10 @@ variable "dynamodb_write_capacity" {
 variable "dynamodb_tags" {
   description = "Tags to apply to the DynamoDB table"
   type        = map(string)
-  default     = {
-    Project       = "Awanggan"
-    Environment   = "Control-Tower"
-    Owner         = "Avalonian"
+  default = {
+    Project     = "Awanggan"
+    Environment = "Control-Tower"
+    Owner       = "Avalonian"
   }
 }
 

@@ -15,6 +15,8 @@ module "aws_organizations_account" {
 
   for_each = zipmap(var.account_names, var.account_emails)
 
+  count = terraform.workspace == "control-tower" ? 1 : 0
+
   account_name  = each.key
   account_email = each.value
   parent_id     = aws_organizations_organization.org.roots[0].id

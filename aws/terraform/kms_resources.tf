@@ -1,5 +1,6 @@
 module "s3_kms_key" {
   source              = "./modules/kms"
+  count               = terraform.workspace == "control-tower" ? 1 : 0
   kms_key_alias       = var.s3_kms_key_alias
   kms_key_description = var.s3_kms_key_description
   key_admins          = var.kms_key_admins
@@ -9,6 +10,7 @@ module "s3_kms_key" {
 
 module "dynamodb_kms_key" {
   source              = "./modules/kms"
+  count               = terraform.workspace == "control-tower" ? 1 : 0
   kms_key_alias       = var.dynamodb_kms_key_alias
   kms_key_description = var.dynamodb_kms_key_description
   key_admins          = var.kms_key_admins
