@@ -96,8 +96,8 @@ jobs:
           # Replace the alias with actual aliases from AWS
           #terraform import module.s3_kms_key.aws_kms_alias.kms_alias "alias/project-awanggan/awanggan-s3-kms-key"
           #terraform import module.dynamodb_kms_key.aws_kms_alias.kms_alias "alias/project-awanggan/awanggan-dynamodb-kms-key"
-          terraform import module.s3.aws_s3_bucket.terraform_state "awanggan-github-bootstrap-terraform-state-bucket"
-          terraform import module.s3.aws_s3_bucket_versioning.terraform_state_versioning "awanggan-github-bootstrap-terraform-state-bucket"
+          terraform import -var-file="control_tower.tfvars" module.s3.aws_s3_bucket.terraform_state "awanggan-github-bootstrap-terraform-state-bucket"
+          terraform import -var-file="control_tower.tfvars" module.s3.aws_s3_bucket_versioning.terraform_state_versioning "awanggan-github-bootstrap-terraform-state-bucket"
 
 
 
