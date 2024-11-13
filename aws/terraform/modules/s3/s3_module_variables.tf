@@ -1,28 +1,15 @@
 variable "s3_bucket_name" {
-  description = "The name of the S3 bucket for Terraform state storage"
+  description = "Name of the S3 bucket to store Terraform state"
   type        = string
 }
 
 variable "kms_key_id" {
-  description = "KMS Key ID for encryption (optional)"
+  description = "KMS Key ID for encrypting objects in the S3 bucket"
   type        = string
-  default     = ""
-}
-
-variable "iam_role_arn" {
-  description = "IAM Role ARN for access control (optional)"
-  type        = string
-  default     = ""
 }
 
 variable "tags" {
-  description = "Tags to apply to the S3 bucket"
+  description = "Tags to assign to the S3 bucket"
   type        = map(string)
-  default = {
-    Project     = "Awanggan"
-    Environment = "Shared"
-    Owner       = "Avalon"
-    Purpose     = "State Management"
-  }
+  default     = {}
 }
-

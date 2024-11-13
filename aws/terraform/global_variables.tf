@@ -3,8 +3,8 @@ variable "common_tags" {
   description = "Common tags to be applied to all resources"
   default = {
     Project        = "Awanggan"
-    Environment    = "Shared"
-    Owner          = "Avalon"
+    Environment    = "Control-Tower"
+    Owner          = "Avalonian"
     CostUnit       = "Alpha"
     Purpose        = "Infrastructure"
     Compliance     = "NA"
@@ -16,7 +16,7 @@ variable "common_tags" {
     Schedule       = "AlwaysOn"
     CustomSchedule = "NA"
     ContactPerson  = "Jester"
-    EmailAddress   = "contact@example.com"
+    EmailAddress   = "Avalonian.MP.ControlTower@proton.me"
   }
 }
 
