@@ -1,9 +1,3 @@
-variable "dynamodb_table_name" {
-  description = "Name of the DynamoDB table for the control tower state lock"
-  type        = string
-  default     = "github-terraform-state-lock"
-}
-
 variable "dynamodb_partition_key" {
   description = "Partition key for the DynamoDB table"
   type        = string
