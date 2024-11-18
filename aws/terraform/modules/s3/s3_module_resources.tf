@@ -1,9 +1,5 @@
 resource "aws_s3_bucket" "terraform_state" {
   bucket = var.s3_bucket_name
-
-  # Enable versioning for the S3 bucket
-  versioning {
-    enabled = true
   }
 
   # Enable server-side encryption with the specified KMS key
