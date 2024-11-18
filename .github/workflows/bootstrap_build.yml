@@ -75,4 +75,5 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create bootstrap resources"
-          terraform apply "tfplan"
+          #terraform apply "tfplan"
+          
