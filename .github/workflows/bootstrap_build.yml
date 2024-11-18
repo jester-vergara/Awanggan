@@ -32,8 +32,18 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform-wrapper: true
-          cli-config-file: true
-          cli-config-location: ~/.terraformrc
+
+      # Initialize Terraform with Backend Config
+      - name: Initialize Terraform
+        working-directory: ./aws/terraform/
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ vars.S3_BUCKET }}" \
+            -backend-config="key=terraform/state/${{ vars.CONTROL_TOWER_ENVIRONMENT }}/${{ vars.CONTROL_TOWER_ENVIRONMENT }}.tfstate" \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
+            -backend-config="encrypt=true" \
+            -reconfigure
 
       # Validate Terraform configuration
       - name: Terraform Validate
@@ -47,18 +57,6 @@ jobs:
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
           tflint --init
           tflint
-
-      # Initialize Terraform with Backend Config
-      - name: Initialize Terraform
-        working-directory: ./aws/terraform/
-        run: |
-          terraform init \
-            -backend-config="bucket=${{ vars.S3_BUCKET }}" \
-            -backend-config="key=terraform/state/${{ vars.CONTROL_TOWER_ENVIRONMENT }}/${{ vars.CONTROL_TOWER_ENVIRONMENT }}.tfstate" \
-            -backend-config="region=${{ vars.AWS_REGION }}" \
-            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
-            -backend-config="encrypt=true" \
-            -reconfigure
 
       # Create and Select Terraform Workspace
       - name: Create and Select Workspace
