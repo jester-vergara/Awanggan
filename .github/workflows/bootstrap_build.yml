@@ -1,4 +1,4 @@
-name: "Terraform Import"
+name: "Terraform Bootstrap"
 
 on:
   push:
@@ -7,25 +7,49 @@ on:
   workflow_dispatch: # Allows the workflow to be triggered manually
 
 jobs:
-  plan-iam:
+  bootstrap:
     runs-on: ubuntu-latest
-    name: Terraform Import Bootstrap
+    name: Terraform Bootstrap
 
     permissions:
       id-token: write
       contents: read
 
     steps:
+      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Configure AWS credentials with OIDC
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Set up Terraform Init Control Tower with Backend Config
+      # Install Terraform
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform-wrapper: true
+          cli-config-file: true
+          cli-config-location: ~/.terraformrc
+
+      # Validate Terraform configuration
+      - name: Terraform Validate
+        working-directory: ./aws/terraform/
+        run: terraform validate
+
+      # Lint Terraform files
+      - name: Lint Terraform
+        working-directory: ./aws/terraform/
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          tflint --init
+          tflint
+
+      # Initialize Terraform with Backend Config
+      - name: Initialize Terraform
         working-directory: ./aws/terraform/
         run: |
           terraform init \
@@ -36,43 +60,21 @@ jobs:
             -backend-config="encrypt=true" \
             -reconfigure
 
-
-      - name: Create and Select Terraform Workspace
+      # Create and Select Terraform Workspace
+      - name: Create and Select Workspace
         working-directory: ./aws/terraform/
         run: |
           terraform workspace list | grep -q "control_tower" || terraform workspace new control_tower
           terraform workspace select control_tower
 
-      - name: Terraform Plan create Control Tower resources
+      # Terraform Plan
+      - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: terraform plan -var-file="control-tower.tfvars" -out=tfplan
 
-      - name: Terraform Import Organization
+      # Terraform Apply
+      - name: Terraform Apply
         working-directory: ./aws/terraform/
         run: |
-          echo "Importing AWS Organization"
-          terraform import aws_organizations_organization.org o-ly1bfwh8zk
-
-      - name: Terraform Import Control Tower accounts
-        working-directory: ./aws/terraform/
-        run: |
-          # Define the accounts and their IDs
-          declare -A accounts=(
-            ["Audit"]="920372985177"
-            ["ControlTower"]="571600861891"
-            ["Dev"]="448049827694"
-            ["LogArchive"]="324037285298"
-            ["Logging"]="977098986447"
-            ["Prod"]="585768161105"
-            ["QA"]="047719616326"
-            ["Sandbox"]="774305606885"
-            ["SecOps"]="050752649836"
-            ["Shared"]="221082169697"
-          )
-
-          # Loop over each account and import
-          for account_name in "${!accounts[@]}"; do
-            account_id="${accounts[$account_name]}"
-            echo "Importing account $account_name with ID $account_id"
-            terraform import "module.aws_organizations_account[\"$account_name\"].aws_organizations_account.this" "$account_id"
-          done
+          echo "Applying tfplan to create bootstrap resources"
+          terraform apply "tfplan"
