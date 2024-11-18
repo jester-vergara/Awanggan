@@ -68,7 +68,7 @@ jobs:
       # Terraform Plan
       - name: Terraform Plan
         working-directory: ./aws/terraform/
-        run: terraform plan -var-file="control-tower.tfvars" -out=tfplan
+        run: terraform plan -var-file="control_tower.tfvars" -out=tfplan
 
       # Terraform Apply
       - name: Terraform Apply
