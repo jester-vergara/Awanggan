@@ -1,12 +1,3 @@
-# Variables for AWS Region and Account Emails
-
-# AWS Region where resources will be created
-variable "region" {
-  description = "AWS region for deploying resources"
-  type        = string
-  default     = "ap-southeast-1" # Set a default region or override in terraform.tfvars
-}
-
 variable "account_names" {
   type    = list(string)
   default = []
@@ -27,11 +18,5 @@ variable "close_on_deletion" {
   description = "Whether to close the account when the resource is destroyed."
   type        = bool
   default     = false
-}
-
-variable "account_id" {
-  type        = string
-  description = "The AWS account ID"
-  default     = ""
 }
 

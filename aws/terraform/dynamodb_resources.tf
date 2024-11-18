@@ -1,6 +1,6 @@
 module "dynamodb" {
   source         = "./modules/dynamodb"
-  table_name     = var.dynamodb_table_name
+  table_name     = local.dynamodb_table_name
   partition_key  = var.dynamodb_partition_key
   sort_key       = var.dynamodb_sort_key
   read_capacity  = var.dynamodb_read_capacity

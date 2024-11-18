@@ -37,16 +37,6 @@ variable "encrypt_state" {
   default = true
 }
 
-variable "workspace_key_prefix" {
-  type    = string
-  default = "avalonian"
-}
-
-variable "aws_profile" {
-  type    = string
-  default = "default" # Specify profile name or use "default"
-}
-
 variable "dynamodb_table" {
   type    = string
   default = "github-terraform-state-lock" # DynamoDB table for state locking
