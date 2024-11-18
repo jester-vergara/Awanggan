@@ -1,4 +1,4 @@
-module "dynamodb" {
+module "dynamodb_github" {
   source         = "./modules/dynamodb"
   table_name     = local.dynamodb_table_name
   partition_key  = var.dynamodb_partition_key
