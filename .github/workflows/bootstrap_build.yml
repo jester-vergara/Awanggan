@@ -136,7 +136,7 @@ jobs:
 
       - name: Terraform Plan
         working-directory: ./aws/terraform/
-        run: #terraform plan -var-file="shared.tfvars" -out=tfplan
+        run: echo "test plan" #terraform plan -var-file="shared.tfvars" -out=tfplan
 
   # Job 5: Apply for Shared Workspace
   apply-shared:
@@ -158,4 +158,5 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create Shared resources"
+          echo "test apply"
           #terraform apply "tfplan"
