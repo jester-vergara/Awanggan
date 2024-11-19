@@ -38,7 +38,7 @@ variable "encrypt_state" {
 }
 
 variable "encrypt_state_string" {
-  type    = bool
+  type    = string
   default = "true"
 }
 
