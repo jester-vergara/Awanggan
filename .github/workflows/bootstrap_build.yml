@@ -39,7 +39,7 @@ jobs:
             -backend-config="key=terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION }}" \
             -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
-            -backend-config="encrypt=${{ vars.encrypt_state_string }}" \
+            -backend-config="encrypt=${{ vars.ENCRYPT_STATE_STRING }}" \
             -reconfigure
 
       - name: Terraform Validate
@@ -125,7 +125,7 @@ jobs:
             -backend-config="key=terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION }}" \
             -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE_NAME }}" \
-            -backend-config="encrypt=${{ vars.encrypt_state_string }}" \
+            -backend-config="encrypt=${{ vars.ENCRYPT_STATE_STRING }}" \
             -reconfigure
 
       - name: Select Workspace
