@@ -35,10 +35,10 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           terraform init \
-            -backend-config="bucket=${{ vars.S3_BUCKET }}" \
+            -backend-config="bucket=${{ vars.S3_BUCKET_NAME }}" \
             -backend-config="key=terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION }}" \
-            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
+            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE_NAME }}" \
             -backend-config="encrypt=${{ vars.ENCRYPT_STATE_STRING }}" \
             -reconfigure
 
