@@ -4,13 +4,13 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Allows the workflow to be triggered manually
+  workflow_dispatch: 
 
 jobs:
-  # Job 1: Initialize and Lint
-  initialize-and-lint:
+  # Job 1: Control Tower
+  control-tower:
     runs-on: ubuntu-latest
-    name: Initialize and Lint Terraform
+    name: Control Tower Account Deployment
 
     permissions:
       id-token: write
@@ -29,7 +29,7 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform-wrapper: true
+          terraform_wrapper: true
 
       - name: Initialize Terraform
         working-directory: ./aws/terraform/
@@ -53,16 +53,6 @@ jobs:
           tflint --init
           tflint
 
-  # Job 2: Plan for Control Tower Workspace
-  plan-control-tower:
-    runs-on: ubuntu-latest
-    needs: initialize-and-lint
-    name: Terraform Plan - Control Tower Workspace
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
       - name: Select Workspace
         working-directory: ./aws/terraform/
         run: |
@@ -73,33 +63,17 @@ jobs:
         working-directory: ./aws/terraform/
         run: terraform plan -var-file="control_tower.tfvars" -out=tfplan
 
-  # Job 3: Apply for Control Tower Workspace
-  apply-control-tower:
-    runs-on: ubuntu-latest
-    needs: plan-control-tower
-    name: Terraform Apply - Control Tower Workspace
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
-          aws-region: ${{ secrets.AWS_REGION }}
-
       - name: Terraform Apply
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create Control Tower resources"
           #terraform apply "tfplan"
 
-  # Job 4: Plan for Shared Workspace
-  plan-shared:
+  # Job 2: Shared
+  shared:
     runs-on: ubuntu-latest
-    needs: apply-control-tower
-    name: Terraform Plan - Shared Workspace
+    needs: control-tower
+    name: Shared Account Deployment
 
     steps:
       - name: Checkout code
@@ -131,22 +105,6 @@ jobs:
       - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: echo "test plan" #terraform plan -var-file="shared.tfvars" -out=tfplan
-
-  # Job 5: Apply for Shared Workspace
-  apply-shared:
-    runs-on: ubuntu-latest
-    needs: plan-shared
-    name: Terraform Apply - Shared Workspace
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Configure AWS credentials with OIDC
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_SHARED }}
-          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Terraform Apply
         working-directory: ./aws/terraform/
