@@ -34,7 +34,7 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./aws/terraform/
         run: |
-          terraform init \
+          terraform init -var-file="control_tower.tfvars" \
             -backend-config="bucket=${{ vars.S3_BUCKET_NAME }}" \
             -backend-config="key=terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION }}" \
@@ -120,7 +120,7 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./aws/terraform/
         run: |
-          terraform init \
+          terraform init -var-file="shared.tfvars" \
             -backend-config="bucket=${{ vars.S3_BUCKET_NAME }}" \
             -backend-config="key=terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION }}" \
