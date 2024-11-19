@@ -37,6 +37,11 @@ variable "encrypt_state" {
   default = true
 }
 
+variable "encrypt_state_string" {
+  type    = string
+  default = "true"
+}
+
 variable "dynamodb_table_name" {
   type    = string
   default = "github-terraform-state-lock" # DynamoDB table for state locking
