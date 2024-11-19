@@ -37,12 +37,12 @@ variable "encrypt_state" {
   default = true
 }
 
-variable "dynamodb_table" {
+variable "dynamodb_table_name" {
   type    = string
   default = "github-terraform-state-lock" # DynamoDB table for state locking
 }
 
-variable "s3_bucket" {
+variable "s3_bucket_name" {
   type    = string
   default = "awanggan-github-bootstrap-terraform-state-bucket" # S3 bucket name for state storage
 }

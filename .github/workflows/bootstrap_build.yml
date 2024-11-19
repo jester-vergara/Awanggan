@@ -7,50 +7,45 @@ on:
   workflow_dispatch: # Allows the workflow to be triggered manually
 
 jobs:
-  bootstrap:
+  # Job 1: Initialize and Lint
+  initialize-and-lint:
     runs-on: ubuntu-latest
-    name: Terraform Bootstrap
+    name: Initialize and Lint Terraform
 
     permissions:
       id-token: write
       contents: read
 
     steps:
-      # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Configure AWS credentials with OIDC
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # Install Terraform
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v2
         with:
           terraform-wrapper: true
 
-      # Initialize Terraform with Backend Config
       - name: Initialize Terraform
         working-directory: ./aws/terraform/
         run: |
           terraform init \
             -backend-config="bucket=${{ vars.S3_BUCKET }}" \
-            -backend-config="key=terraform/state/${{ vars.CONTROL_TOWER_ENVIRONMENT }}/${{ vars.CONTROL_TOWER_ENVIRONMENT }}.tfstate" \
+            -backend-config="key=terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION }}" \
             -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
-            -backend-config="encrypt=true" \
+            -backend-config="encrypt=${{ vars.ENCRYPT_STATE }}" \
             -reconfigure
 
-      # Validate Terraform configuration
       - name: Terraform Validate
         working-directory: ./aws/terraform/
         run: terraform validate
 
-      # Lint Terraform files
       - name: Lint Terraform
         working-directory: ./aws/terraform/
         run: |
@@ -58,22 +53,109 @@ jobs:
           tflint --init
           tflint
 
-      # Create and Select Terraform Workspace
-      - name: Create and Select Workspace
+  # Job 2: Plan for Control Tower Workspace
+  plan-control-tower:
+    runs-on: ubuntu-latest
+    needs: initialize-and-lint
+    name: Terraform Plan - Control Tower Workspace
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Select Workspace
         working-directory: ./aws/terraform/
         run: |
           terraform workspace list | grep -q "control_tower" || terraform workspace new control_tower
           terraform workspace select control_tower
 
-      # Terraform Plan
       - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: terraform plan -var-file="control_tower.tfvars" -out=tfplan
 
-      # Terraform Apply
+  # Job 3: Apply for Control Tower Workspace
+  apply-control-tower:
+    runs-on: ubuntu-latest
+    needs: plan-control-tower
+    name: Terraform Apply - Control Tower Workspace
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Terraform Apply
         working-directory: ./aws/terraform/
         run: |
-          echo "Applying tfplan to create bootstrap resources"
+          echo "Applying tfplan to create Control Tower resources"
           #terraform apply "tfplan"
-          
+
+  # Job 4: Plan for Shared Workspace
+  plan-shared:
+    runs-on: ubuntu-latest
+    needs: apply-control-tower
+    name: Terraform Plan - Shared Workspace
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_SHARED }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Initialize Terraform
+        working-directory: ./aws/terraform/
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ vars.S3_BUCKET }}" \
+            -backend-config="key=terraform/state/${{ vars.ENVIRONMENT }}/${{ vars.ENVIRONMENT }}.tfstate" \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
+            -backend-config="encrypt=${{ vars.ENCRYPT_STATE }}" \
+            -reconfigure
+
+      - name: Select Workspace
+        working-directory: ./aws/terraform/
+        run: |
+          terraform workspace list | grep -q "shared" || terraform workspace new shared
+          terraform workspace select shared
+
+      - name: Terraform Plan
+        working-directory: ./aws/terraform/
+        run: #terraform plan -var-file="shared.tfvars" -out=tfplan
+
+  # Job 5: Apply for Shared Workspace
+  apply-shared:
+    runs-on: ubuntu-latest
+    needs: plan-shared
+    name: Terraform Apply - Shared Workspace
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_SHARED }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Terraform Apply
+        working-directory: ./aws/terraform/
+        run: |
+          echo "Applying tfplan to create Shared resources"
+          #terraform apply "tfplan"
