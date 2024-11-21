@@ -7,5 +7,5 @@ module "dynamodb_github" {
   read_capacity  = var.dynamodb_read_capacity
   write_capacity = var.dynamodb_write_capacity
   tags           = var.dynamodb_tags
-  kms_key_id     = var.dynamodb_kms_key_id
+  kms_key_id     = module.dynamodb_kms_key[0].kms_key_arn # Reference the output
 }
