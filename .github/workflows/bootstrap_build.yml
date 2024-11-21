@@ -62,6 +62,14 @@ jobs:
       - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: terraform plan -var-file="control_tower.tfvars" -out=tfplan
+      
+      - name: Terraform Import
+        working-directory: ./aws/terraform/
+        run: |
+          echo "Importing AWS Resources"
+          echo " "
+          #terraform import module.s3_kms_key.aws_kms_key.kms_key "arn:aws:kms:ap-southeast-1:571600861891:key/09cd2274-112b-489e-b468-7b23008ac07a"
+          #terraform import module.dynamodb_kms_key.aws_kms_key.kms_key "arn:aws:kms:ap-southeast-1:571600861891:key/22413008-c2cb-45ef-a0ac-2dc70a387fac"
 
       - name: Terraform Apply
         working-directory: ./aws/terraform/
