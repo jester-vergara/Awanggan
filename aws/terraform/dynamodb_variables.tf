@@ -35,5 +35,5 @@ variable "dynamodb_tags" {
 variable "dynamodb_kms_key_id" {
   description = "KMS Key ID for server-side encryption"
   type        = string
-  default     = "arn:aws:kms:ap-southeast-1:571600861891:key/09cd2274-112b-489e-b468-7b23008ac07a"
+  default     = ""
 }

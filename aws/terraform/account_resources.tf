@@ -1,4 +1,6 @@
 resource "aws_organizations_organization" "org" {
+  count = terraform.workspace == "control_tower" ? 1 : 0
+
   aws_service_access_principals = [
     "controltower.amazonaws.com",
     "account.amazonaws.com",
@@ -12,6 +14,8 @@ resource "aws_organizations_organization" "org" {
 
 module "aws_organizations_account" {
   source = "./modules/account"
+
+  count = terraform.workspace == "control_tower" ? 1 : 0
 
   for_each = zipmap(var.account_names, var.account_emails)
 
