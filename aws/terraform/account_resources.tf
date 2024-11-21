@@ -14,10 +14,10 @@ resource "aws_organizations_organization" "org" {
 
 module "aws_organizations_account" {
   source = "./modules/account"
+  #for_each = terraform.workspace == "control_tower" ? zipmap(var.account_names, var.account_emails) : {}
+  for_each = zipmap(var.account_names, var.account_emails)
 
   count = terraform.workspace == "control_tower" ? 1 : 0
-
-  for_each = zipmap(var.account_names, var.account_emails)
 
   account_name  = each.key
   account_email = each.value
