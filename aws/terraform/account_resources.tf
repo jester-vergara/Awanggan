@@ -21,7 +21,7 @@ module "aws_organizations_account" {
 
   account_name  = each.key
   account_email = each.value
-  parent_id     = aws_organizations_organization.org.roots[0].id
+  parent_id     = aws_organizations_organization.org[0].roots[0].id
 
 
   # Additional parameters
