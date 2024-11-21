@@ -1,5 +1,5 @@
 resource "aws_organizations_organization" "org" {
-  #count = terraform.workspace == "control_tower" ? 1 : 0
+  count = terraform.workspace == "control_tower" ? 1 : 0
 
   aws_service_access_principals = [
     "controltower.amazonaws.com",
