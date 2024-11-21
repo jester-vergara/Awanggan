@@ -25,8 +25,8 @@ account_emails = [
 ]
 
 # Replace this with the actual ARN of the imported KMS key
-s3_kms_key_id = "arn:aws:kms:ap-southeast-1:571600861891:key/09cd2274-112b-489e-b468-7b23008ac07a"
+s3_kms_key_id = "arn:aws:kms:ap-southeast-1:571600861891:key/951dc5bd-0a5f-425e-b91a-43d5c3c6e051"
 
 #iam_role_arn = "arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"
 
-dynamodb_kms_key_id = "arn:aws:kms:ap-southeast-1:571600861891:key/09cd2274-112b-489e-b468-7b23008ac07a"
+dynamodb_kms_key_id = "arn:aws:kms:ap-southeast-1:571600861891:key/8a4305c8-5a2c-4e01-bd83-d61dad076c70"
