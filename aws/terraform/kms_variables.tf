@@ -25,8 +25,8 @@ variable "dynamodb_kms_key_description" {
 variable "kms_key_admins" {
   description = "List of IAM users or roles to be KMS key administrators"
   type        = list(string)
-  default     = [
-    "arn:aws:iam::571600861891:user/awanggan-admin-00", 
+  default = [
+    "arn:aws:iam::571600861891:user/awanggan-admin-00",
     "arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"
   ]
 }
@@ -34,8 +34,8 @@ variable "kms_key_admins" {
 variable "kms_key_users" {
   description = "List of IAM users or roles that can use the KMS key"
   type        = list(string)
-  default     = [
-    "arn:aws:iam::571600861891:user/awanggan-admin-00", 
+  default = [
+    "arn:aws:iam::571600861891:user/awanggan-admin-00",
     "arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"
   ]
 }
