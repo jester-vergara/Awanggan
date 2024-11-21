@@ -13,7 +13,7 @@ resource "aws_organizations_organization" "org" {
 
 
 module "aws_organizations_account" {
-  source = "./modules/account"
+  source   = "./modules/account"
   for_each = terraform.workspace == "control_tower" ? zipmap(var.account_names, var.account_emails) : {}
   #for_each = zipmap(var.account_names, var.account_emails)
 
@@ -21,7 +21,8 @@ module "aws_organizations_account" {
 
   account_name  = each.key
   account_email = each.value
-  parent_id     = aws_organizations_organization.org.roots[0].id
+  parent_id     = aws_organizations_organization.org[0].roots[0].id
+
 
   # Additional parameters
   iam_user_access_to_billing = var.iam_user_access_to_billing
