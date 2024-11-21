@@ -6,7 +6,8 @@ output "account_ids" {
 }
 
 output "organization_id" {
-  value       = aws_organizations_organization.org[0].id
+  #value       = aws_organizations_organization.org[0].id
+  value       = aws_organizations_organization.org.id
   description = "The ID of the AWS Organization."
 }
 
