@@ -41,7 +41,13 @@ jobs:
             -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
             -backend-config="encrypt=true" \
             -reconfigure
-
+        
+      # - name: Initialize Terraform
+      #   working-directory: ./aws/terraform/
+      #   run: |
+      #     terraform init \
+      #       -reconfigure
+    
       - name: Terraform Validate
         working-directory: ./aws/terraform/
         run: terraform validate
@@ -68,7 +74,7 @@ jobs:
       #   run: |
       #     echo "Importing AWS Resources"
       #     echo " "
-      #     terraform import -var-file="control_tower.tfvars" aws_organizations_organization.org o-ly1bfwh8zk
+      #     terraform import -var-file="control_tower.tfvars" aws_organizations_organization.org[0] o-ly1bfwh8zk
       #     terraform import -var-file="control_tower.tfvars" module.s3_kms_key.aws_kms_key.kms_key "arn:aws:kms:ap-southeast-1:571600861891:key/09cd2274-112b-489e-b468-7b23008ac07a"
       #     terraform import -var-file="control_tower.tfvars" module.dynamodb_kms_key.aws_kms_key.kms_key "arn:aws:kms:ap-southeast-1:571600861891:key/22413008-c2cb-45ef-a0ac-2dc70a387fac"
       #     terraform import -var-file="control_tower.tfvars" module.s3_github.aws_s3_bucket.terraform_state "awanggan-github-bootstrap-terraform-state-bucket"

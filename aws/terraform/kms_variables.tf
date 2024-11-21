@@ -1,13 +1,13 @@
 variable "s3_kms_key_alias" {
   description = "Alias for the S3 KMS key"
   type        = string
-  default     = "alias/project-awanggan/awanggan-s3-kms-key"
+  default     = "alias/project-awanggan/github-s3-kms-key"
 }
 
 variable "dynamodb_kms_key_alias" {
   description = "Alias for the DynamoDB KMS key"
   type        = string
-  default     = "alias/project-awanggan/awanggan-dynamodb-kms-key"
+  default     = "alias/project-awanggan/github-dynamodb-kms-key"
 }
 
 variable "s3_kms_key_description" {
@@ -25,11 +25,17 @@ variable "dynamodb_kms_key_description" {
 variable "kms_key_admins" {
   description = "List of IAM users or roles to be KMS key administrators"
   type        = list(string)
-  default     = ["awanggan-admin-00", "GitHubAssumeRoleAwanggan"]
+  default     = [
+    "arn:aws:iam::571600861891:user/awanggan-admin-00", 
+    "arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"
+  ]
 }
 
 variable "kms_key_users" {
   description = "List of IAM users or roles that can use the KMS key"
   type        = list(string)
-  default     = ["awanggan-admin-00", "GitHubAssumeRoleAwanggan"]
+  default     = [
+    "arn:aws:iam::571600861891:user/awanggan-admin-00", 
+    "arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"
+  ]
 }

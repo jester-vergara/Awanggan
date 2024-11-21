@@ -7,3 +7,8 @@ terraform {
     encrypt        = var.encrypt_state
   }
 }
+# terraform {
+#   backend "local" {
+#     path = "./terraform.tfstate"
+#   }
+# }
