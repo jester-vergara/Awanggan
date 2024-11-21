@@ -32,8 +32,8 @@ variable "dynamodb_tags" {
   }
 }
 
-variable "dynamodb_kms_key_id" {
-  description = "KMS Key ID for server-side encryption"
-  type        = string
-  default     = ""
-}
+# variable "dynamodb_kms_key_id" {
+#   description = "KMS Key ID for server-side encryption"
+#   type        = string
+#   default     = ""
+# }
