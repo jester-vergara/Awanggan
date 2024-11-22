@@ -62,9 +62,9 @@ jobs:
       - name: Select Workspace
         working-directory: ./aws/terraform/
         run: |
-          terraform workspace list | grep -q "control_tower" || terraform workspace new control_tower
-          terraform workspace select control_tower
+          terraform workspace list | grep -q "shared" || terraform workspace new shared
+          terraform workspace select shared
 
       - name: Terraform Plan
         working-directory: ./aws/terraform/
-        run: terraform plan -var-file="control_tower.tfvars" -out=tfplan
+        run: terraform plan -var-file="shared.tfvars" -out=tfplan
