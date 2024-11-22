@@ -92,7 +92,7 @@ jobs:
   shared-init:
     runs-on: ubuntu-latest
     needs: control-tower
-    name: Shared Account Deployment
+    name: Shared Init Deployment
 
     permissions:
       id-token: write
@@ -149,8 +149,8 @@ jobs:
 
   shared-plan-apply:
     runs-on: ubuntu-latest
-    needs: control-tower
-    name: Shared Account Deployment
+    needs: shared-init
+    name: Shared Plan Apply Deployment
 
     permissions:
       id-token: write
