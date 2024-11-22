@@ -1,4 +1,4 @@
-name: "Terraform Bootstrap"
+name: "Terraform Bootstrap - Shared"
 
 on:
   push:
@@ -10,7 +10,7 @@ jobs:
   # Job 1: Control Tower
   control-tower:
     runs-on: ubuntu-latest
-    name: Control Tower Account Deployment
+    name: Shared Account Deployment
 
     permissions:
       id-token: write

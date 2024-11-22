@@ -1,4 +1,4 @@
-name: "Terraform Bootstrap"
+name: "Terraform Bootstrap - Control Tower"
 
 on:
   push:
