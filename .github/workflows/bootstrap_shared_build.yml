@@ -1,0 +1,70 @@
+name: "Terraform Bootstrap"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: 
+
+jobs:
+  # Job 1: Control Tower
+  control-tower:
+    runs-on: ubuntu-latest
+    name: Control Tower Account Deployment
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_SHARED }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: true
+
+      - name: Initialize Terraform
+        working-directory: ./aws/terraform/
+        run: |
+          terraform init \
+            -backend-config="bucket=${{ vars.S3_BUCKET }}" \
+            -backend-config="key=terraform/state/${{ vars.SHARED_ENVIRONMENT }}/${{ vars.SHARED_ENVIRONMENT }}.tfstate" \
+            -backend-config="region=${{ vars.AWS_REGION }}" \
+            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
+            -backend-config="encrypt=true" \
+            -reconfigure
+        
+      # - name: Initialize Terraform
+      #   working-directory: ./aws/terraform/
+      #   run: |
+      #     terraform init \
+      #       -reconfigure
+    
+      - name: Terraform Validate
+        working-directory: ./aws/terraform/
+        run: terraform validate
+
+      - name: Lint Terraform
+        working-directory: ./aws/terraform/
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+          tflint --init
+          tflint
+
+      - name: Select Workspace
+        working-directory: ./aws/terraform/
+        run: |
+          terraform workspace list | grep -q "control_tower" || terraform workspace new control_tower
+          terraform workspace select control_tower
+
+      - name: Terraform Plan
+        working-directory: ./aws/terraform/
+        run: terraform plan -var-file="control_tower.tfvars" -out=tfplan
