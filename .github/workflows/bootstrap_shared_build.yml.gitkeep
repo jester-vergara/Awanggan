@@ -7,8 +7,8 @@ on:
   workflow_dispatch: 
 
 jobs:
-  # Job 1: Control Tower
-  control-tower:
+  # Job 2: Shared
+  shared:
     runs-on: ubuntu-latest
     name: Shared Account Deployment
 
