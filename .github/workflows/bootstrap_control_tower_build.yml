@@ -87,8 +87,9 @@ jobs:
         run: |
           echo "Applying tfplan to create Control Tower resources"
           terraform apply "tfplan"
-
-  shared:
+  
+  # Job 2: Shared
+  shared-init:
     runs-on: ubuntu-latest
     needs: control-tower
     name: Shared Account Deployment
@@ -104,7 +105,7 @@ jobs:
       - name: Configure AWS credentials with OIDC
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_SHARED }}
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_CONTROL_TOWER }}
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Install Terraform
@@ -146,6 +147,32 @@ jobs:
           terraform workspace list | grep -q "shared" || terraform workspace new shared
           terraform workspace select shared
 
+  shared-plan-apply:
+    runs-on: ubuntu-latest
+    needs: control-tower
+    name: Shared Account Deployment
+
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials with OIDC
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME_SHARED }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
       - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: terraform plan -var-file="shared.tfvars" -out=tfplan
+        
+      - name: Terraform Apply
+        working-directory: ./aws/terraform/
+        run: |
+          echo "Applying tfplan to create Control Tower resources"
+          echo ""
+          #terraform apply "tfplan"
