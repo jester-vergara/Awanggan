@@ -120,7 +120,7 @@ jobs:
             -backend-config="bucket=${{ vars.S3_BUCKET }}" \
             -backend-config="key=terraform/state/${{ vars.SHARED_ENVIRONMENT }}/${{ vars.SHARED_ENVIRONMENT }}.tfstate" \
             -backend-config="region=${{ vars.AWS_REGION }}" \
-            #-backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
+            -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
             -backend-config="encrypt=true" \
             -reconfigure
         
