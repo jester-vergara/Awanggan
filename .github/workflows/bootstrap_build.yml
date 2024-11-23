@@ -152,9 +152,15 @@ jobs:
         run: |
           terraform plan -var-file="shared.tfvars" -out=tfplan
 
-      - name: Terraform Import
+      # - name: Terraform Import
+      #   working-directory: ./aws/terraform/
+      #   run: |
+      #     echo "Importing AWS Resources"
+      #     echo " "
+      #     terraform import -var-file="control_tower.tfvars" module.dynamodb_github[0].aws_dynamodb_table.this github-terraform-state-lock
+      
+      - name: Terraform Apply
         working-directory: ./aws/terraform/
         run: |
-          echo "Importing AWS Resources"
-          echo " "
-          terraform import -var-file="control_tower.tfvars" module.dynamodb_github[0].aws_dynamodb_table.this github-terraform-state-lock
+          echo "Applying tfplan to create Shared resources"
+          #terraform apply "tfplan"
