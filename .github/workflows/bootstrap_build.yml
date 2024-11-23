@@ -128,7 +128,8 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           aws dynamodb list-tables --region ap-southeast-1
-          aws sts get-caller-identity --query "Account" --output text
+          account_id = aws sts get-caller-identity --query "Account" --output text
+          echo $account_id
           terraform init \
             -backend-config="bucket=${{ vars.S3_BUCKET }}" \
             -backend-config="key=terraform/state/${{ vars.SHARED_ENVIRONMENT }}/${{ vars.SHARED_ENVIRONMENT }}.tfstate" \
