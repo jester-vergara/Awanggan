@@ -172,10 +172,10 @@ jobs:
       - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: |
-          terraform plan -var-file="shared.tfvars" -out=tfplan
+          terraform plan -var-file="shared.tfvars" -out=tfplan -lock=false
       
       - name: Terraform Apply
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create Shared resources"
-          #terraform apply "tfplan"
+          terraform apply "tfplan"
