@@ -6,7 +6,6 @@ output "account_ids" {
 }
 
 output "organization_id" {
-  value       = aws_organizations_organization.org[0].id
   description = "The ID of the AWS Organization."
+  value       = length(aws_organizations_organization.org) > 0 ? aws_organizations_organization.org[0].id : null
 }
-
