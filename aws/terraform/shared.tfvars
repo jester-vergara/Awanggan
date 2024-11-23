@@ -12,3 +12,5 @@ kms_key_users = [
 ]
 
 dynamodb_kms_key_alias = "alias/shared/github-dynamodb-kms-key"
+
+encrypt_state = false
