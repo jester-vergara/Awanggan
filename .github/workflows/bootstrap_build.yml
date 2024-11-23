@@ -157,4 +157,4 @@ jobs:
         run: |
           echo "Importing AWS Resources"
           echo " "
-          #terraform import -var-file="control_tower.tfvars" module.dynamodb_github[0].aws_dynamodb_table.this github-terraform-state-lock
+          terraform import -var-file="control_tower.tfvars" module.dynamodb_github[0].aws_dynamodb_table.this github-terraform-state-lock
