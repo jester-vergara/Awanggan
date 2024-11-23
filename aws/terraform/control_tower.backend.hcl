@@ -1,5 +1,5 @@
-bucket         = "your-s3-bucket-name"
+bucket         = "awanggan-gitlab-terraform-state-bucket"
 key            = "terraform/state/control_tower/control_tower.tfstate"
-region         = "your-region"
-dynamodb_table = "your-dynamodb-table-name"
+region         = "ap-southeast-1"
+dynamodb_table = "github-terraform-state-lock"
 encrypt        = true
