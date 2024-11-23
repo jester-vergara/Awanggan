@@ -127,8 +127,7 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./aws/terraform/
         run: |
-          account_id = aws sts get-caller-identity --query "Account" --output text
-          echo $account_id
+          aws sts get-caller-identity --query "Account" --output text
           aws dynamodb list-tables --region ap-southeast-1
           aws iam list-roles --query "Roles[].Arn" --output table
           terraform init \
