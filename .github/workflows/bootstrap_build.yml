@@ -172,11 +172,7 @@ jobs:
       - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: |
-          aws sts get-caller-identity --query "Account" --output text
-          aws dynamodb list-tables --region ap-southeast-1
-          aws iam list-roles --query "Roles[].Arn" --output table
-          aws s3 ls
-          terraform plan -var-file="shared.tfvars" -out=tfplan
+          terraform plan -var-file="shared.tfvars" -out=tfplan -lock=false
       
       - name: Terraform Apply
         working-directory: ./aws/terraform/
