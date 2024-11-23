@@ -127,9 +127,6 @@ jobs:
       - name: Initialize Terraform
         working-directory: ./aws/terraform/
         run: |
-          aws sts get-caller-identity --query "Account" --output text
-          aws dynamodb list-tables --region ap-southeast-1
-          aws iam list-roles --query "Roles[].Arn" --output table
           terraform init \
             -backend-config="bucket=${{ vars.S3_BUCKET }}" \
             -backend-config="key=terraform/state/${{ vars.SHARED_ENVIRONMENT }}/${{ vars.SHARED_ENVIRONMENT }}.tfstate" \
@@ -175,6 +172,9 @@ jobs:
       - name: Terraform Plan
         working-directory: ./aws/terraform/
         run: |
+          aws sts get-caller-identity --query "Account" --output text
+          aws dynamodb list-tables --region ap-southeast-1
+          aws iam list-roles --query "Roles[].Arn" --output table
           terraform plan -var-file="shared.tfvars" -out=tfplan
       
       - name: Terraform Apply
