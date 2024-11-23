@@ -10,3 +10,5 @@ kms_key_admins = [
 kms_key_users = [
   "arn:aws:iam::961341517694:role/GitHubAssumeRoleAwanggan"
 ]
+
+dynamodb_kms_key_alias = "shared_dynamodb_key"
