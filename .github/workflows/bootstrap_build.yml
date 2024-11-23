@@ -62,7 +62,18 @@ jobs:
       - name: Select Workspace
         working-directory: ./aws/terraform/
         run: |
-          terraform workspace list | grep -q "control_tower" || terraform workspace new control_tower
+          # Initialize Terraform to ensure backend is ready
+          terraform init -input=false
+
+          # Check if the "control_tower" workspace exists, and create it if not
+          if ! terraform workspace list | grep -q "control_tower"; then
+            echo "Workspace 'control_tower' does not exist. Creating it..."
+            terraform workspace new control_tower
+          else
+            echo "Workspace 'control_tower' already exists."
+          fi
+
+          # Select the "control_tower" workspace
           terraform workspace select control_tower
 
       - name: Terraform Plan
@@ -144,7 +155,18 @@ jobs:
       - name: Select Workspace
         working-directory: ./aws/terraform/
         run: |
-          terraform workspace list | grep -q "shared" || terraform workspace new shared
+          # Initialize Terraform to ensure backend is ready
+          terraform init -input=false
+
+          # Check if the "shared" workspace exists, and create it if not
+          if ! terraform workspace list | grep -q "shared"; then
+            echo "Workspace 'shared' does not exist. Creating it..."
+            terraform workspace new shared
+          else
+            echo "Workspace 'shared' already exists."
+          fi
+
+          # Select the "shared" workspace
           terraform workspace select shared
 
       - name: Terraform Plan
