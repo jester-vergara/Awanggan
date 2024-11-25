@@ -12,3 +12,8 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
+
+variable "aws_region" {
+  default     = "ap-southeast-1"
+  description = "AWS region to deploy resources"
+}
