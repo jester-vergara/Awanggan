@@ -46,3 +46,8 @@ data "aws_iam_policy_document" "kms_policy" {
     resources = ["*"]
   }
 }
+
+resource "aws_kms_alias" "kms_alias" {
+  name          = "${var.kms_key_alias}/awanggan-kms-key"
+  target_key_id = aws_kms_key.kms_key.key_id
+}
