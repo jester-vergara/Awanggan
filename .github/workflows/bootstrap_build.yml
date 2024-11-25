@@ -178,4 +178,5 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create Shared resources"
+          echo "TEST tfplan"
           #terraform apply "tfplan"
