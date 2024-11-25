@@ -27,11 +27,9 @@ resource "aws_dynamodb_table" "this" {
 }
 
 resource "aws_dynamodb_table_policy" "this" {
-  table_name = aws_dynamodb_table.this.name
-  policy     = var.dynamodb_policy
+  resource_arn = aws_dynamodb_table.this.arn
+  policy       = data.aws_iam_policy_document.dynamodb_policy.json
 }
-
-data "aws_caller_identity" "current" {}
 
 data "aws_iam_policy_document" "dynamodb_policy" {
   statement {
@@ -52,8 +50,8 @@ data "aws_iam_policy_document" "dynamodb_policy" {
       "dynamodb:BatchWriteItem"
     ]
     resources = [
-      "arn:aws:dynamodb:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:table/${var.table_name}",
-      "arn:aws:dynamodb:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:table/${var.table_name}/*"
+      aws_dynamodb_table.this.arn,
+      "${aws_dynamodb_table.this.arn}/*"
     ]
   }
 }
