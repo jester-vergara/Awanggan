@@ -22,16 +22,6 @@ variable "dynamodb_write_capacity" {
   default     = 5
 }
 
-variable "dynamodb_tags" {
-  description = "Tags to apply to the DynamoDB table"
-  type        = map(string)
-  default = {
-    Project     = "Awanggan"
-    Environment = "Control-Tower"
-    Owner       = "Avalonian"
-  }
-}
-
 # variable "dynamodb_kms_key_id" {
 #   description = "KMS Key ID for server-side encryption"
 #   type        = string
