@@ -28,5 +28,5 @@ module "dynamodb_kms_key_shared" {
   key_admins          = var.kms_key_admins
   key_users           = var.kms_key_users
   account_root_arn    = var.account_root_arn
-  common_tags         = var.common_tags
+  common_tags         = merge(var.common_tags, { CreationDate = "20241125" })
 }

@@ -23,3 +23,65 @@ resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
     status = "Enabled"
   }
 }
+
+resource "aws_s3_bucket_policy" "this" {
+  bucket = aws_s3_bucket.this.id
+  policy = var.s3_bucket_policy
+}
+
+data "aws_iam_policy_document" "s3_bucket_policy" {
+  statement {
+    sid       = "AllowGitHubRoleAccess"
+    effect    = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::961341517694:role/GitHubAssumeRoleAwanggan"]
+    }
+    actions = [
+      "s3:GetObject",
+      "s3:PutObject",
+      "s3:DeleteObject",
+      "s3:List*"
+    ]
+    resources = [
+      "arn:aws:s3:::awanggan-github-bootstrap-terraform-state-bucket",
+      "arn:aws:s3:::awanggan-github-bootstrap-terraform-state-bucket/*"
+    ]
+  }
+
+  statement {
+    sid       = "AllowAdminAccess"
+    effect    = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::571600861891:user/awanggan-admin-00"]
+    }
+    actions = [
+      "s3:GetObject",
+      "s3:ListBucket"
+    ]
+    resources = [
+      "arn:aws:s3:::awanggan-github-bootstrap-terraform-state-bucket",
+      "arn:aws:s3:::awanggan-github-bootstrap-terraform-state-bucket/*"
+    ]
+  }
+
+  statement {
+    sid       = "AllowOrganizationAccess"
+    effect    = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::961341517694:role/OrganizationAccountAccessRole"]
+    }
+    actions = [
+      "s3:Get*",
+      "s3:PutObject",
+      "s3:DeleteObject",
+      "s3:List*"
+    ]
+    resources = [
+      "arn:aws:s3:::awanggan-github-bootstrap-terraform-state-bucket",
+      "arn:aws:s3:::awanggan-github-bootstrap-terraform-state-bucket/*"
+    ]
+  }
+}

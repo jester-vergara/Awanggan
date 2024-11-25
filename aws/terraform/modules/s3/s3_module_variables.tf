@@ -13,3 +13,9 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "s3_bucket_policy" {
+  description = "Resource-based policy for the S3 bucket"
+  type        = string
+  default     = ""
+}

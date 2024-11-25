@@ -6,7 +6,7 @@ module "dynamodb_github" {
   sort_key       = var.dynamodb_sort_key
   read_capacity  = var.dynamodb_read_capacity
   write_capacity = var.dynamodb_write_capacity
-  tags           = var.dynamodb_tags
+  tags           = merge(var.common_tags, { CreationDate = "20241108" })
   access_roles   = var.access_roles
   kms_key_id     = module.dynamodb_kms_key[0].kms_key_arn # Reference the output
 }
@@ -19,7 +19,7 @@ module "dynamodb_github_shared" {
   sort_key       = var.dynamodb_sort_key
   read_capacity  = var.dynamodb_read_capacity
   write_capacity = var.dynamodb_write_capacity
-  tags           = var.dynamodb_tags
+  tags           = merge(var.common_tags, { CreationDate = "20241125" })
   access_roles   = var.access_roles
   kms_key_id     = module.dynamodb_kms_key_shared[0].kms_key_arn # Reference the output
 }
