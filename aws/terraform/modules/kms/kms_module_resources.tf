@@ -8,8 +8,8 @@ resource "aws_kms_key" "kms_key" {
 
 data "aws_iam_policy_document" "kms_policy" {
   statement {
-    sid       = "Enable IAM User Permissions"
-    effect    = "Allow"
+    sid    = "Enable IAM User Permissions"
+    effect = "Allow"
     principals {
       type        = "AWS"
       identifiers = [var.account_root_arn]
@@ -19,13 +19,13 @@ data "aws_iam_policy_document" "kms_policy" {
   }
 
   statement {
-    sid       = "Allow Key Administrators"
-    effect    = "Allow"
+    sid    = "Allow Key Administrators"
+    effect = "Allow"
     principals {
       type        = "AWS"
       identifiers = var.key_admins
     }
-    actions   = [
+    actions = [
       "kms:Create*", "kms:Describe*", "kms:Enable*", "kms:List*",
       "kms:Put*", "kms:Update*", "kms:Revoke*", "kms:Disable*",
       "kms:Get*", "kms:Delete*", "kms:ScheduleKeyDeletion", "kms:CancelKeyDeletion"
@@ -34,13 +34,13 @@ data "aws_iam_policy_document" "kms_policy" {
   }
 
   statement {
-    sid       = "Allow Key Usage"
-    effect    = "Allow"
+    sid    = "Allow Key Usage"
+    effect = "Allow"
     principals {
       type        = "AWS"
       identifiers = var.key_users
     }
-    actions   = [
+    actions = [
       "kms:Encrypt", "kms:Decrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*", "kms:DescribeKey"
     ]
     resources = ["*"]

@@ -1,7 +1,7 @@
 resource "aws_dynamodb_table" "this" {
-  name           = var.table_name
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = var.partition_key
+  name         = var.table_name
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = var.partition_key
 
   # Define the partition key explicitly
   attribute {
@@ -33,8 +33,8 @@ resource "aws_dynamodb_resource_policy" "this" {
 
 data "aws_iam_policy_document" "dynamodb_policy" {
   statement {
-    sid       = "AllowAccess"
-    effect    = "Allow"
+    sid    = "AllowAccess"
+    effect = "Allow"
     principals {
       type        = "AWS"
       identifiers = var.access_roles

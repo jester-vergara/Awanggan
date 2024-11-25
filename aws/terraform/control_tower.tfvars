@@ -33,4 +33,4 @@ account_emails = [
 
 account_root_arn = "arn:aws:iam::571600861891:root"
 
-access_roles = "arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"
+access_roles = ["arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"]

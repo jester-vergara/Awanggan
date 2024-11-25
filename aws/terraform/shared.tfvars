@@ -17,4 +17,4 @@ encrypt_state = false
 
 account_root_arn = "arn:aws:iam::961341517694:root"
 
-access_roles = "arn:aws:iam::961341517694:role/GitHubAssumeRoleAwanggan"
+access_roles = ["arn:aws:iam::961341517694:role/GitHubAssumeRoleAwanggan"]
