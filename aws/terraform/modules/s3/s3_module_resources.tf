@@ -25,7 +25,7 @@ resource "aws_s3_bucket_versioning" "terraform_state_versioning" {
 }
 
 resource "aws_s3_bucket_policy" "this" {
-  bucket = aws_s3_bucket.this.id
+  bucket = aws_s3_bucket.terraform_state.id
   policy = var.s3_bucket_policy
 }
 
