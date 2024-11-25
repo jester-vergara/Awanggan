@@ -37,3 +37,8 @@ variable "dynamodb_tags" {
 #   type        = string
 #   default     = ""
 # }
+
+variable "access_roles" {
+  description = "List of IAM roles or users to grant access to the DynamoDB table"
+  type        = list(string)
+}

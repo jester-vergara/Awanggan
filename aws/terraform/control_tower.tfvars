@@ -32,3 +32,5 @@ account_emails = [
 #dynamodb_kms_key_id = "arn:aws:kms:ap-southeast-1:571600861891:key/8a4305c8-5a2c-4e01-bd83-d61dad076c70"
 
 account_root_arn = "arn:aws:iam::571600861891:root"
+
+access_roles = "arn:aws:iam::571600861891:role/GitHubAssumeRoleAwanggan"

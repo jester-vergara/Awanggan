@@ -37,3 +37,14 @@ variable "kms_key_id" {
   type        = string
   default     = null
 }
+
+variable "dynamodb_policy" {
+  description = "Resource-based policy for the DynamoDB table"
+  type        = string
+  default     = ""
+}
+
+variable "access_roles" {
+  description = "List of IAM roles or users to grant access to the DynamoDB table"
+  type        = list(string)
+}
