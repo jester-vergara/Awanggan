@@ -26,7 +26,7 @@ resource "aws_dynamodb_table" "this" {
   tags = var.tags
 }
 
-resource "aws_dynamodb_table_policy" "this" {
+resource "aws_dynamodb_resource_policy" "this" {
   resource_arn = aws_dynamodb_table.this.arn
   policy       = data.aws_iam_policy_document.dynamodb_policy.json
 }
