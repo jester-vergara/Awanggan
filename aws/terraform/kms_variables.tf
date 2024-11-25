@@ -41,3 +41,8 @@ variable "kms_key_users" {
     "arn:aws:iam::961341517694:role/GitHubAssumeRoleAwanggan"
   ]
 }
+
+variable "account_root_arn" {
+  description = "The ARN of the root account"
+  type        = string
+}

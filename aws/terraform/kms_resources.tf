@@ -5,6 +5,7 @@ module "s3_kms_key" {
   kms_key_description = var.s3_kms_key_description
   key_admins          = var.kms_key_admins
   key_users           = var.kms_key_users
+  account_root_arn    = var.account_root_arn
   common_tags         = var.common_tags
 }
 
@@ -15,6 +16,7 @@ module "dynamodb_kms_key" {
   kms_key_description = var.dynamodb_kms_key_description
   key_admins          = var.kms_key_admins
   key_users           = var.kms_key_users
+  account_root_arn    = var.account_root_arn
   common_tags         = var.common_tags
 }
 
@@ -25,5 +27,6 @@ module "dynamodb_kms_key_shared" {
   kms_key_description = var.dynamodb_kms_key_description
   key_admins          = var.kms_key_admins
   key_users           = var.kms_key_users
+  account_root_arn    = var.account_root_arn
   common_tags         = var.common_tags
 }

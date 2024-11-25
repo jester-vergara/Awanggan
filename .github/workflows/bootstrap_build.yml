@@ -97,7 +97,7 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create Control Tower resources"
-          terraform apply "tfplan"
+          #terraform apply "tfplan"
   
   # Job 2: Shared #######################################################################
   shared:
@@ -134,12 +134,6 @@ jobs:
             -backend-config="dynamodb_table=${{ vars.DYNAMODB_TABLE }}" \
             -backend-config="encrypt=true" \
             -reconfigure
-        
-      # - name: Initialize Terraform
-      #   working-directory: ./aws/terraform/
-      #   run: |
-      #     terraform init \
-      #       -reconfigure
     
       - name: Terraform Validate
         working-directory: ./aws/terraform/

@@ -22,3 +22,14 @@ variable "kms_key_alias" {
   description = "Alias for the KMS key"
   type        = string
 }
+
+variable "account_root_arn" {
+  description = "The ARN of the root account"
+  type        = string
+}
+
+variable "kms_deletion_window_in_days" {
+  description = "The waiting period, specified in number of days, before the KMS key is deleted"
+  type        = number
+  default     = 30
+}

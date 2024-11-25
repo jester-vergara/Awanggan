@@ -1,67 +1,48 @@
 resource "aws_kms_key" "kms_key" {
   description             = var.kms_key_description
-  deletion_window_in_days = 30
+  deletion_window_in_days = var.kms_deletion_window_in_days
+  policy                  = data.aws_iam_policy_document.kms_policy.json
 
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Id": "key-default-1",
-  "Statement": [
-    {
-      "Sid": "Enable IAM User Permissions",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
-      },
-      "Action": "kms:*",
-      "Resource": "*"
-    },
-    {
-      "Sid": "Allow Key Administrators",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": ${jsonencode(var.key_admins)}
-      },
-      "Action": [
-        "kms:Create*",
-        "kms:Describe*",
-        "kms:Enable*",
-        "kms:List*",
-        "kms:Put*",
-        "kms:Update*",
-        "kms:Revoke*",
-        "kms:Disable*",
-        "kms:Get*",
-        "kms:Delete*",
-        "kms:ScheduleKeyDeletion",
-        "kms:CancelKeyDeletion"
-      ],
-      "Resource": "*"
-    },
-    {
-      "Sid": "Allow Key Usage",
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": ${jsonencode(var.key_users)}
-      },
-      "Action": [
-        "kms:Encrypt",
-        "kms:Decrypt",
-        "kms:ReEncrypt*",
-        "kms:GenerateDataKey*",
-        "kms:DescribeKey"
-      ],
-      "Resource": "*"
+  tags = var.common_tags
+}
+
+data "aws_iam_policy_document" "kms_policy" {
+  statement {
+    sid       = "Enable IAM User Permissions"
+    effect    = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = [var.account_root_arn]
     }
-  ]
-}
-EOF
-}
+    actions   = ["kms:*"]
+    resources = ["*"]
+  }
 
-data "aws_caller_identity" "current" {}
+  statement {
+    sid       = "Allow Key Administrators"
+    effect    = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = var.key_admins
+    }
+    actions   = [
+      "kms:Create*", "kms:Describe*", "kms:Enable*", "kms:List*",
+      "kms:Put*", "kms:Update*", "kms:Revoke*", "kms:Disable*",
+      "kms:Get*", "kms:Delete*", "kms:ScheduleKeyDeletion", "kms:CancelKeyDeletion"
+    ]
+    resources = ["*"]
+  }
 
-
-resource "aws_kms_alias" "kms_alias" {
-  name          = "${var.kms_key_alias}/awanggan-kms-key"
-  target_key_id = aws_kms_key.kms_key.key_id
+  statement {
+    sid       = "Allow Key Usage"
+    effect    = "Allow"
+    principals {
+      type        = "AWS"
+      identifiers = var.key_users
+    }
+    actions   = [
+      "kms:Encrypt", "kms:Decrypt", "kms:ReEncrypt*", "kms:GenerateDataKey*", "kms:DescribeKey"
+    ]
+    resources = ["*"]
+  }
 }
