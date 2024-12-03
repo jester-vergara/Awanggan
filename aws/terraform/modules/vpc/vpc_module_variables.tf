@@ -34,3 +34,12 @@ variable "create_nat_gateways" {
   description = "Whether to create NAT Gateways for private subnet internet access"
   default     = false
 }
+
+variable "vpc_mapping" {
+  description = <<EOT
+  WARNING:
+  - Do not remove existing entries without understanding consequences.
+  - Always ensure "vpc_to_create" only includes new VPCs for creation.
+  - Use lifecycle rules or archived states to manage VPC lifecycle.
+  EOT
+}
