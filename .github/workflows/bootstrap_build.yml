@@ -97,7 +97,7 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create Control Tower resources"
-          terraform apply "tfplan"
+          #terraform apply "tfplan"
   
   # Job 2: Shared #######################################################################
   shared:
@@ -172,4 +172,4 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           echo "Applying tfplan to create Shared resources"
-          terraform apply "tfplan"
+          #terraform apply "tfplan"
