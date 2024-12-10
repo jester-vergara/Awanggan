@@ -31,8 +31,8 @@ resource "aws_s3_bucket_policy" "this" {
 
 data "aws_iam_policy_document" "s3_bucket_policy" {
   statement {
-    sid       = "AllowGitHubRoleAccess"
-    effect    = "Allow"
+    sid    = "AllowGitHubRoleAccess"
+    effect = "Allow"
     principals {
       type        = "AWS"
       identifiers = ["arn:aws:iam::961341517694:role/GitHubAssumeRoleAwanggan"]
@@ -50,8 +50,8 @@ data "aws_iam_policy_document" "s3_bucket_policy" {
   }
 
   statement {
-    sid       = "AllowAdminAccess"
-    effect    = "Allow"
+    sid    = "AllowAdminAccess"
+    effect = "Allow"
     principals {
       type        = "AWS"
       identifiers = ["arn:aws:iam::571600861891:user/awanggan-admin-00"]
@@ -67,8 +67,8 @@ data "aws_iam_policy_document" "s3_bucket_policy" {
   }
 
   statement {
-    sid       = "AllowOrganizationAccess"
-    effect    = "Allow"
+    sid    = "AllowOrganizationAccess"
+    effect = "Allow"
     principals {
       type        = "AWS"
       identifiers = ["arn:aws:iam::961341517694:role/OrganizationAccountAccessRole"]

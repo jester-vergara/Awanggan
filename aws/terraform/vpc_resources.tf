@@ -1,6 +1,6 @@
 #
 module "vpc_shared" {
-  source   = "./modules/vpc"
+  source = "./modules/vpc"
   for_each = {
     for vpc in var.vpc_to_create : join("-", vpc) => {
       name       = "VPC-${vpc[0]}-${vpc[1]}-${vpc[2]}"
@@ -23,7 +23,7 @@ output "debug_vpc_ids" {
 
 #
 module "subnet_shared" {
-  source   = "./modules/vpc"
+  source = "./modules/vpc"
   for_each = {
     for subnet in var.subnet_to_create : join("-", subnet) => {
       vpc_key = join("-", [subnet[0], subnet[1], subnet[2]])
@@ -31,13 +31,13 @@ module "subnet_shared" {
     }
   }
 
-  vpc_id             = module.vpc_shared[each.value.vpc_key].vpc_id
-  name                = each.key
-  cidr_block          = ""
-  public_subnet_cidrs = [for s in each.value.subnets : s.cidr_block if can(regex("PUBLIC", s.name))]
+  vpc_id               = module.vpc_shared[each.value.vpc_key].vpc_id
+  name                 = each.key
+  cidr_block           = ""
+  public_subnet_cidrs  = [for s in each.value.subnets : s.cidr_block if can(regex("PUBLIC", s.name))]
   private_subnet_cidrs = [for s in each.value.subnets : s.cidr_block if can(regex("PUBLIC", s.name))]
-  availability_zones  = [for s in each.value.subnets : s.az]
-  tags                = { Name = each.key }
-  create_nat_gateways = true
+  availability_zones   = [for s in each.value.subnets : s.az]
+  tags                 = { Name = each.key }
+  create_nat_gateways  = true
 }
 
