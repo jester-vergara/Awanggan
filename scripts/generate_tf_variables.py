@@ -1,6 +1,6 @@
-import pandas as pd
-import os
 import ipaddress
+import json
+import os
 
 # Parameters
 accounts = {
@@ -41,79 +41,91 @@ ecosystem_naming_values = [
     "Octavus"
 ]
 
-vpcs_per_region = 5
-subnets_per_vpc = 15
-ecosystem_count = 8
-subnets_per_ecosystem = 15
-
 cidr_division = {
     "vpc": "/15",
     "subnet": "/22"
 }
 
-# Define output file path
-output_file_path = "./docs/ip_cidr_inventory.xlsx"
+# Helper Functions
+def generate_cidr(base_cidr, division, count):
+    """Generate CIDRs by dividing the base CIDR."""
+    network = ipaddress.ip_network(base_cidr)
+    generated_cidrs = list(network.subnets(new_prefix=int(division.split('/')[1])))
+    if len(generated_cidrs) < count:
+        raise ValueError(
+            f"Insufficient CIDRs: Requested {count}, but only {len(generated_cidrs)} available from {base_cidr}"
+        )
+    return generated_cidrs[:count]
 
-# Ensure the directory exists
-os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
+def format_terraform_variable(variable_name, data):
+    """Format data into Terraform variable style."""
+    formatted_data = f'variable "{variable_name}" {{\n  default = ' + json.dumps(data, indent=2) + "\n}"
+    return formatted_data
 
-# Generate VPC allocation
-def generate_vpc_allocation(account_name, base_cidr):
-    vpc_data = []
-    base_network = ipaddress.IPv4Network(base_cidr)
-    vpc_cidrs = list(base_network.subnets(new_prefix=15))  # Subdivide /8 into /15
-    
-    for region_index, (region_code, region_name) in enumerate(regions.items()):
-        for vpc_index, vpc_label in enumerate(vpc_naming_conventions):
-            if region_index * len(vpc_naming_conventions) + vpc_index >= len(vpc_cidrs):
-                break  # Stop if we run out of /15 blocks
-            vpc_cidr = vpc_cidrs[region_index * len(vpc_naming_conventions) + vpc_index]
-            vpc_name = f"{account_name.upper()}-VPC-{region_code.upper()}-{vpc_label}"
-            vpc_data.append({
-                "Region Code": region_code,
-                "Region Name": region_name,
-                "VPC Name": vpc_name,
-                "CIDR Block": str(vpc_cidr)
-            })
-    return pd.DataFrame(vpc_data)
+# Generate VPC CIDRs with reserved blocks
+vpc_cidr_mapping = {}
+for account, base_cidr in accounts.items():
+    vpc_cidr_mapping[account] = {}
+    try:
+        region_cidrs = generate_cidr(base_cidr, cidr_division["vpc"], len(regions) * len(vpc_naming_conventions))
+        for region_index, (region_code, region_name) in enumerate(regions.items()):
+            vpc_cidr_mapping[account][region_code] = {}
+            # Assign CIDRs for active VPCs
+            for vpc_index, vpc_label in enumerate(vpc_naming_conventions):
+                cidr_index = region_index * len(vpc_naming_conventions) + vpc_index
+                vpc_cidr_mapping[account][region_code][vpc_label.lower()] = str(region_cidrs[cidr_index])
+            
+            # Assign reserved CIDRs
+            reserved_start_index = region_index * len(vpc_naming_conventions) + len(vpc_naming_conventions)
+            reserved_blocks = region_cidrs[reserved_start_index:reserved_start_index + 5]
+            for i, reserved_cidr in enumerate(reserved_blocks, start=1):
+                vpc_cidr_mapping[account][region_code][f"reserved-{i:02}"] = str(reserved_cidr)
+    except ValueError as e:
+        print(f"Error generating VPC CIDRs for account {account}: {e}")
 
-# Generate Subnet allocation
-def generate_subnet_allocation(vpc_allocation_df):
-    subnet_data = []
-    for _, vpc in vpc_allocation_df.iterrows():
-        vpc_cidr = ipaddress.IPv4Network(vpc["CIDR Block"])
-        subnet_cidrs = list(vpc_cidr.subnets(new_prefix=22))  # Subdivide /15 into /22
-        
-        for ecosystem_index, ecosystem_name in enumerate(ecosystem_naming_values[:ecosystem_count]):
-            for subnet_index in range(subnets_per_ecosystem):
-                az = f"AZ{(subnet_index % 3) + 1}"  # Cycle through AZ1, AZ2, AZ3
-                subnet_type = ["APP-PRIVATE", "APP-PUBLIC", "RDS-PRIVATE", "EKS-PRIVATE", "EKS-PUBLIC"][(subnet_index // 3) % 5]
-                subnet_cidr = subnet_cidrs[ecosystem_index * subnets_per_ecosystem + subnet_index]
-                subnet_name = f"{vpc['VPC Name']}-{subnet_type}-SUBNET-{az}-{ecosystem_name.upper()}"
-                subnet_data.append({
-                    "VPC Name": vpc["VPC Name"],
-                    "Subnet Name": subnet_name,
-                    "AZ": az,
-                    "Ecosystem": ecosystem_name,
-                    "Subnet Type": subnet_type,
-                    "CIDR Block": str(subnet_cidr)
-                })
-    return pd.DataFrame(subnet_data)
+# Generate Subnet CIDRs with reservus subnets
+subnet_cidr_mapping = {}
+for account, regions_data in vpc_cidr_mapping.items():
+    subnet_cidr_mapping[account] = {}
+    for region_code, vpcs in regions_data.items():
+        subnet_cidr_mapping[account][region_code] = {}
+        for vpc_label, vpc_cidr in vpcs.items():
+            vpc_network = ipaddress.IPv4Network(vpc_cidr)
+            subnet_cidrs = list(vpc_network.subnets(new_prefix=22))
+            subnet_cidr_mapping[account][region_code][vpc_label] = {}
+            
+            # Assign active ecosystem subnets
+            for ecosystem_index, ecosystem_name in enumerate(ecosystem_naming_values):
+                subnet_cidr_mapping[account][region_code][vpc_label][ecosystem_name.lower()] = [
+                    {
+                        "cidr_block": str(subnet_cidrs[i]),
+                        "az": f"AZ{i % 3 + 1}",
+                        "name": f"APP-{['PRIVATE', 'PUBLIC', 'RDS', 'EKS'][i % 4]}"
+                    }
+                    for i in range(ecosystem_index * 15, (ecosystem_index + 1) * 15)
+                ]
 
-# Main script execution
-with pd.ExcelWriter(output_file_path, engine="openpyxl") as writer:
-    # First Tab: Account Allocation
-    pd.DataFrame(accounts.items(), columns=["Account", "CIDR Block"]).to_excel(writer, sheet_name="Accounts", index=False)
+            # Assign reservus subnets
+            reservus_start_index = len(ecosystem_naming_values) * 15
+            subnet_cidr_mapping[account][region_code][vpc_label]["reservus"] = [
+                {
+                    "cidr_block": str(subnet_cidrs[i]),
+                    "az": f"AZ{i % 3 + 1}",
+                    "name": f"RESERVUS-{i - reservus_start_index + 1:02}"
+                }
+                for i in range(reservus_start_index, len(subnet_cidrs))
+            ]
 
-    # Second Tab: Regions
-    pd.DataFrame(regions.items(), columns=["Region Code", "Region Name"]).to_excel(writer, sheet_name="Regions", index=False)
+# Output Terraform Variables
+vpc_variable = format_terraform_variable("vpc_cidr", vpc_cidr_mapping)
+subnet_variable = format_terraform_variable("subnet_cidr", subnet_cidr_mapping)
 
-    # Generate and save tabs for each account
-    for account, base_cidr in accounts.items():
-        vpc_df = generate_vpc_allocation(account, base_cidr)
-        vpc_df.to_excel(writer, sheet_name=f"{account} VPCs", index=False)
+# Save to Files
+os.makedirs("output", exist_ok=True)
+with open("output/vpc_cidr.tf", "w") as vpc_file:
+    vpc_file.write(vpc_variable)
 
-        subnet_df = generate_subnet_allocation(vpc_df)
-        subnet_df.to_excel(writer, sheet_name=f"{account} Subnets", index=False)
+with open("output/subnet_cidr.tf", "w") as subnet_file:
+    subnet_file.write(subnet_variable)
 
-print(f"Excel file successfully generated at {output_file_path}!")
+print("Terraform variable files generated successfully in the 'output' folder.")

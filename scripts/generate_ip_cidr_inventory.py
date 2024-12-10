@@ -57,7 +57,7 @@ output_file_path = "./docs/ip_cidr_inventory.xlsx"
 # Ensure the directory exists
 os.makedirs(os.path.dirname(output_file_path), exist_ok=True)
 
-# Generate VPC allocation
+# Generate VPC allocation with reserved VPCs
 def generate_vpc_allocation(account_name, base_cidr):
     vpc_data = []
     base_network = ipaddress.IPv4Network(base_cidr)
@@ -65,10 +65,26 @@ def generate_vpc_allocation(account_name, base_cidr):
     
     for region_index, (region_code, region_name) in enumerate(regions.items()):
         for vpc_index, vpc_label in enumerate(vpc_naming_conventions):
-            if region_index * len(vpc_naming_conventions) + vpc_index >= len(vpc_cidrs):
+            cidr_index = region_index * len(vpc_naming_conventions) + vpc_index
+            if cidr_index >= len(vpc_cidrs):
                 break  # Stop if we run out of /15 blocks
-            vpc_cidr = vpc_cidrs[region_index * len(vpc_naming_conventions) + vpc_index]
+            vpc_cidr = vpc_cidrs[cidr_index]
             vpc_name = f"{account_name.upper()}-VPC-{region_code.upper()}-{vpc_label}"
+            vpc_data.append({
+                "Region Code": region_code,
+                "Region Name": region_name,
+                "VPC Name": vpc_name,
+                "CIDR Block": str(vpc_cidr)
+            })
+        
+        # Handle reserved VPCs for each region
+        reserved_start_index = len(vpc_naming_conventions)
+        for reserved_index in range(reserved_start_index, len(vpc_cidrs) // len(regions)):
+            cidr_index = region_index * len(vpc_naming_conventions) + reserved_index
+            if cidr_index >= len(vpc_cidrs):
+                break
+            vpc_cidr = vpc_cidrs[cidr_index]
+            vpc_name = f"{account_name.upper()}-VPC-{region_code.upper()}-RESERVED-{reserved_index - reserved_start_index + 1:02}"
             vpc_data.append({
                 "Region Code": region_code,
                 "Region Name": region_name,
@@ -77,18 +93,22 @@ def generate_vpc_allocation(account_name, base_cidr):
             })
     return pd.DataFrame(vpc_data)
 
-# Generate Subnet allocation
+# Generate Subnet allocation with reservus subnets
 def generate_subnet_allocation(vpc_allocation_df):
     subnet_data = []
     for _, vpc in vpc_allocation_df.iterrows():
         vpc_cidr = ipaddress.IPv4Network(vpc["CIDR Block"])
         subnet_cidrs = list(vpc_cidr.subnets(new_prefix=22))  # Subdivide /15 into /22
         
+        # Active ecosystems
         for ecosystem_index, ecosystem_name in enumerate(ecosystem_naming_values[:ecosystem_count]):
             for subnet_index in range(subnets_per_ecosystem):
                 az = f"AZ{(subnet_index % 3) + 1}"  # Cycle through AZ1, AZ2, AZ3
                 subnet_type = ["APP-PRIVATE", "APP-PUBLIC", "RDS-PRIVATE", "EKS-PRIVATE", "EKS-PUBLIC"][(subnet_index // 3) % 5]
-                subnet_cidr = subnet_cidrs[ecosystem_index * subnets_per_ecosystem + subnet_index]
+                cidr_index = ecosystem_index * subnets_per_ecosystem + subnet_index
+                if cidr_index >= len(subnet_cidrs):
+                    break
+                subnet_cidr = subnet_cidrs[cidr_index]
                 subnet_name = f"{vpc['VPC Name']}-{subnet_type}-SUBNET-{az}-{ecosystem_name.upper()}"
                 subnet_data.append({
                     "VPC Name": vpc["VPC Name"],
@@ -98,6 +118,21 @@ def generate_subnet_allocation(vpc_allocation_df):
                     "Subnet Type": subnet_type,
                     "CIDR Block": str(subnet_cidr)
                 })
+        
+        # Reservus subnets
+        reserved_start_index = ecosystem_count * subnets_per_ecosystem
+        for reservus_index in range(reserved_start_index, len(subnet_cidrs)):
+            az = f"AZ{(reservus_index % 3) + 1}"
+            subnet_name = f"{vpc['VPC Name']}-RESERVUS-{reservus_index - reserved_start_index + 1:02}"
+            subnet_cidr = subnet_cidrs[reservus_index]
+            subnet_data.append({
+                "VPC Name": vpc["VPC Name"],
+                "Subnet Name": subnet_name,
+                "AZ": az,
+                "Ecosystem": "RESERVUS",
+                "Subnet Type": "RESERVED",
+                "CIDR Block": str(subnet_cidr)
+            })
     return pd.DataFrame(subnet_data)
 
 # Main script execution
