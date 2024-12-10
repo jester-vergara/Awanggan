@@ -24,3 +24,11 @@ vpc_cidr_allocations = {
   "SHARED-VPC-US-EAST-1-BETA"  = "11.1.0.0/15"
   # Add more as per allocation table
 }
+
+vpc_to_create = [
+  ["shared", "ap-southeast-1", "alpha"]
+]
+
+subnet_to_create = [
+  ["shared", "ap-southeast-1", "alpha", "primus"]
+]

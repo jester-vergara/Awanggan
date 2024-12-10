@@ -37,3 +37,7 @@ output "shared_vpc_regions" {
   value       = { for k, v in aws_vpc.this : k => v.region }
   description = "Regions for all Shared VPCs"
 }
+
+output "vpc_id" {
+  value = aws_vpc.this.id
+}
