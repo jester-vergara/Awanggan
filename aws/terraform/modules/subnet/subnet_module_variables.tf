@@ -36,10 +36,11 @@ variable "availability_zones" {
 
 variable "subnets" {
   description = "List of subnet definitions including CIDR blocks, AZs, and names"
-  type        = map(object({
+  type = map(object({
     cidr_block = string
     az         = string
     name       = string
+    tags       = map(string)
   }))
 }
 
@@ -57,4 +58,10 @@ variable "create_db_subnet_group" {
 variable "name" {
   description = "The name prefix to use for resources"
   type        = string
+}
+
+variable "tags" {
+  description = "Tags to assign to all created resources"
+  type        = map(string)
+  default     = {}
 }
