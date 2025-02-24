@@ -34,10 +34,11 @@ module "vpc_shared" {
       account    = vpc[0]
       region     = vpc[1]
       label      = vpc[2]
-      tags = {
-        Project     = "Awanggan"
-        Environment = terraform.workspace
-      }
+      tags = merge(var.common_tags, {
+        Project      = "Awanggan"
+        Environment  = terraform.workspace
+        CreationDate = "20250224"
+      })
     }
   } : {}
 

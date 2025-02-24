@@ -3,6 +3,11 @@ output "vpc_id" {
   value       = aws_vpc.this.id
 }
 
+output "name" {
+  description = "The name of the VPC"
+  value       = var.name
+}
+
 output "vpc_cidr_block" {
   description = "The CIDR block of the VPC created"
   value       = aws_vpc.this.cidr_block
