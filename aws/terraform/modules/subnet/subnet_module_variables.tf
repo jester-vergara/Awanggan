@@ -49,6 +49,11 @@ variable "vpc_id" {
   type        = string
 }
 
+variable "igw_id" {
+  type = string
+}
+
+
 variable "create_db_subnet_group" {
   description = "Flag to determine if the DB subnet group should be created"
   type        = bool

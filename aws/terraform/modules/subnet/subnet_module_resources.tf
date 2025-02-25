@@ -13,7 +13,7 @@ resource "aws_subnet" "private" {
     }
   )
 
-  depends_on = [aws_vpc.this]
+  depends_on = [var.vpc_id, var.igw_id] #
 }
 
 resource "aws_subnet" "public" {
@@ -31,7 +31,7 @@ resource "aws_subnet" "public" {
     }
   )
 
-  depends_on = [aws_internet_gateway.igw, aws_vpc.this]
+  depends_on = [var.vpc_id, var.igw_id] #
 }
 
 resource "aws_db_subnet_group" "db" {
@@ -47,5 +47,5 @@ resource "aws_db_subnet_group" "db" {
     }
   )
 
-  depends_on = [aws_vpc.this]
+  depends_on = [var.vpc_id] #
 }
