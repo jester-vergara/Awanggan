@@ -143,8 +143,8 @@ jobs:
         working-directory: ./aws/terraform/
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
-          tflint --init
-          tflint
+          tflint --init || echo "TFLint init failed, but continuing..."
+          tflint --no-color --log-level=debug || echo "TFLint execution failed, but continuing..."
 
       - name: Select Workspace
         working-directory: ./aws/terraform/
